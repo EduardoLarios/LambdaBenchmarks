@@ -1,3 +1,11 @@
 ﻿LambdaBenchmarks/.vs
 LambdaBenchmarks/bin
 LambdaBenchmarks/obj
+.vs
+DictionaryBenchmarks/obj
+HashSetBenchmarks/obj
+LinkedListBenchmarks/bin
+LinkedListBenchmarks/obj
+ListBenchmarks/bin
+ListBenchmarks/obj
+.vs

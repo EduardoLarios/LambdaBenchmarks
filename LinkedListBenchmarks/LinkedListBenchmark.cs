@@ -93,23 +93,26 @@ namespace LinkedListBenchmarks
     public class IterateLinkedList
     {
         private const int N = 1_000_000;
+        private const int target = 1;
         private readonly LinkedList<int> iterateValues;
 
         public IterateLinkedList()
         {
-            iterateValues = new LinkedList<int>(Enumerable.Range(1, N));
+            iterateValues = new LinkedList<int>(Enumerable.Repeat(1, N));
         }
 
         [Benchmark]
-        public int LinqIterate() => iterateValues.Count(_ => true);
+        public int LinqIterate() => iterateValues.Count(n => n == target);
 
         [Benchmark]
         public int ForLoopIterate()
         {
             int counter = 0;
+            var head = iterateValues.First;
             for (int i = 0; i < iterateValues.Count; i++)
             {
-                ++counter;
+                if (head.Value == target) ++counter;
+                head = head.Next;
             }
 
             return counter;
@@ -119,9 +122,9 @@ namespace LinkedListBenchmarks
         public int ForEachIterate()
         {
             int counter = 0;
-            foreach (int item in iterateValues)
+            foreach (int value in iterateValues)
             {
-                ++counter;
+                if(value == target) ++counter;
             }
 
             return counter;
@@ -217,11 +220,11 @@ namespace LinkedListBenchmarks
     public class CopyLinkedList
     {
         private const int N = 1_000_000;
-        private readonly List<int> valuesToCopy;
+        private readonly LinkedList<int> valuesToCopy;
 
         public CopyLinkedList()
         {
-            valuesToCopy = new List<int>(Enumerable.Range(1, N));
+            valuesToCopy = new LinkedList<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
@@ -231,9 +234,12 @@ namespace LinkedListBenchmarks
         public LinkedList<int> ForLoopCopy()
         {
             var result = new LinkedList<int>();
+            var head = valuesToCopy.First;
+
             for (int i = 0; i < valuesToCopy.Count; i++)
             {
-                result.AddLast(valuesToCopy[i]);
+                result.AddLast(head.Value);
+                head = head.Next;
             }
 
             return result;
@@ -291,7 +297,13 @@ namespace LinkedListBenchmarks
         static void Main(string[] args)
         {
             Console.WriteLine("--- LINKED LIST BENCHMARKS ---");
+            BenchmarkRunner.Run<PopulateLinkedList>();
             BenchmarkRunner.Run<IterateLinkedList>();
+            BenchmarkRunner.Run<ContainsLinkedList>();
+            BenchmarkRunner.Run<CopyLinkedList>();
+            BenchmarkRunner.Run<MapLinkedList>();
+            BenchmarkRunner.Run<FilterLinkedList>();
+            BenchmarkRunner.Run<ReduceLinkedList>();
         }
     }
 }

@@ -273,7 +273,13 @@ namespace ListBenchmarks
         static void Main(string[] args)
         {
             Console.WriteLine("--- LIST BENCHMARKS ---");
+            BenchmarkRunner.Run<PopulateList>();
             BenchmarkRunner.Run<IterateList>();
+            BenchmarkRunner.Run<ContainsList>();
+            BenchmarkRunner.Run<CopyList>();
+            BenchmarkRunner.Run<MapList>();
+            BenchmarkRunner.Run<FilterList>();
+            BenchmarkRunner.Run<ReduceList>();
         }
     }
 }
