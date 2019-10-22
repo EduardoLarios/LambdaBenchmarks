@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,12 @@ namespace DictionaryBenchmarks
 
             public ReduceDictionary()
             {
+                data = new Dictionary<int, int>(N);
                 for (int i = 0; i < N; i++)
                 {
                     data.Add(i, i * 10);
                 }
             }
-
 
             [Benchmark]
             public int LinqAggregate()
@@ -68,51 +69,51 @@ namespace DictionaryBenchmarks
             }
 
             [Benchmark]
-            public HashSet<int> LinqPopulate() => new HashSet<int>(data.Select((n, index) => n + index));
+            public Dictionary<int, int> LinqPopulate() => new Dictionary<int, int>(data.Select(n => new KeyValuePair<int, int>(n, n * 5)));
 
             [Benchmark]
-            public HashSet<int> LoopPopulate()
-            {
-                var set = new HashSet<int>(N);
+            public Dictionary<int, int> LoopPopulate()
+            { 
+                var map = new Dictionary<int, int>(N);
 
                 for (int i = 0; i < data.Count; i++)
                 {
-                    var latest = data[i] + i;
-                    if (!set.Contains(latest)) set.Add(latest);
+                    if (!map.ContainsKey(data[i])) map.Add(data[i], data[i] * 5);
                 }
 
-                return set;
+                return map;
             }
 
             [Benchmark]
-            public HashSet<int> IteratorPopulate()
+            public Dictionary<int, int> IteratorPopulate()
             {
-                var set = new HashSet<int>(N);
-                var current = 0;
+                var map = new Dictionary<int, int>(N);
 
                 foreach (int value in data)
                 {
-                    var latest = value + current++;
-                    if (!set.Contains(latest)) set.Add(latest);
+                    if (!map.ContainsKey(value)) map.Add(value, value * 5);
                 }
 
-                return set;
+                return map;
             }
         }
 
         public class IterateDictionary
         {
             private const int N = 1_000_000;
-            private readonly HashSet<int> data;
+            private readonly Dictionary<int, int> data;
 
             public IterateDictionary()
             {
-
-                data = new HashSet<int>(Enumerable.Range(1, N));
+                data = new Dictionary<int, int>(N);
+                for (int i = 0; i < N; i++)
+                {
+                    data.Add(i, i * 10);
+                }
             }
 
             [Benchmark]
-            public int LinqIterate() => data.Count(n => n > 0);
+            public int LinqIterate() => data.Count(kvp => kvp.Value < int.MaxValue);
 
             [Benchmark]
             public int LoopIterate()
@@ -122,8 +123,8 @@ namespace DictionaryBenchmarks
 
                 while (iter.MoveNext())
                 {
-                    var value = iter.Current;
-                    if (value > 0) ++count;
+                    var kvp = iter.Current;
+                    if (kvp.Value < int.MaxValue) ++count;
                 }
 
                 return count;
@@ -133,9 +134,9 @@ namespace DictionaryBenchmarks
             public int IteratorIterate()
             {
                 int count = 0;
-                foreach (int value in data)
+                foreach (var kvp in data)
                 {
-                    if (value > 0) ++count;
+                    if (kvp.Value < int.MaxValue) ++count;
                 }
 
                 return count;
@@ -146,24 +147,24 @@ namespace DictionaryBenchmarks
         {
             private const int N = 1_000_000;
             private readonly int target;
-            private readonly HashSet<int> data;
+            private readonly Dictionary<int, int> data;
 
             public ContainsDictionary()
             {
                 var generator = new Random();
 
-                data = new HashSet<int>(N);
-                target = (int)Math.Pow(generator.Next(-N, N), 2);
+                data = new Dictionary<int, int>(N);
+                target = generator.Next(-N, N);
 
-                while (data.Count < N)
+                for (int i = 0; i < N; i++)
                 {
                     var value = generator.Next(-N, N);
-                    if (!data.Contains(value)) data.Add(value);
+                    data.Add(i, value);
                 }
             }
 
             [Benchmark]
-            public int LinqContains() => data.First(n => (int)Math.Pow(n, 2) == target);
+            public int LinqContains() => data.First(kvp => kvp.Value == target).Key;
 
             [Benchmark]
             public int LoopContains()
@@ -171,8 +172,8 @@ namespace DictionaryBenchmarks
                 var iter = data.GetEnumerator();
                 while (iter.MoveNext())
                 {
-                    var value = (int)Math.Pow(iter.Current, 2);
-                    if (value == target) return iter.Current;
+                    var kvp = iter.Current;
+                    if (kvp.Value == target) return iter.Current.Key;
                 }
 
                 return default;
@@ -181,10 +182,9 @@ namespace DictionaryBenchmarks
             [Benchmark]
             public int IteratorContains()
             {
-                foreach (int n in data)
+                foreach (var kvp in data)
                 {
-                    var value = (int)Math.Pow(n, 2);
-                    if (value == target) return n;
+                    if (kvp.Value == target) return kvp.Key;
                 }
 
                 return default;
@@ -194,77 +194,93 @@ namespace DictionaryBenchmarks
         public class FilterDictionary
         {
             private const int N = 1_000_000;
-            private readonly HashSet<int> data;
+            private readonly Dictionary<int, int> data;
+            private readonly Consumer consumer;
 
             public FilterDictionary()
             {
-                var generator = new Random();
-                data = new HashSet<int>(N);
+                consumer = new Consumer();
+                data = new Dictionary<int, int>(N);
 
-                while (data.Count < N)
+                for (int i = 0; i < N; i++)
                 {
-                    var value = generator.Next(-N, N);
-                    if (!data.Contains(value)) data.Add(value);
+                    data.Add(i, i * 10);
                 }
             }
 
             [Benchmark]
-            public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
+            public void LinqFilter() => data.Where(kvp => kvp.Key % 2 == 0).Consume(consumer);
 
             [Benchmark]
-            public IEnumerable<int> LoopFilter()
+            public void LoopFilter()
             {
+                var result = new List<KeyValuePair<int, int>>(N);
                 var iter = data.GetEnumerator();
+
                 while (iter.MoveNext())
                 {
-                    if (iter.Current >= 0) yield return iter.Current;
+                    if (iter.Current.Key % 2 == 0)
+                    {
+                        result.Add(iter.Current);
+                    }
                 }
+
+                result.Consume(consumer);
             }
 
             [Benchmark]
-            public IEnumerable<int> IteratorFilter()
+            public void IteratorFilter()
             {
-                foreach (int value in data)
+                var result = new List<KeyValuePair<int, int>>(N);
+
+                foreach (var kvp in data)
                 {
-                    if (value >= 0) yield return value;
+                    if (kvp.Key % 2 == 0) result.Add(kvp);
                 }
+
+                result.Consume(consumer);
             }
         }
 
         public class CopyDictionary
         {
             private const int N = 1_000_000;
-            private readonly HashSet<int> data;
+            private readonly Dictionary<int, int> data;
 
             public CopyDictionary()
             {
-                data = new HashSet<int>(Enumerable.Range(1, N));
+                data = new Dictionary<int, int>(N);
+
+                for (int i = 0; i < N; i++)
+                {
+                    data.Add(i, i * 10);
+                }
             }
 
             [Benchmark]
-            public HashSet<int> LinqCopy() => new HashSet<int>(data.Select(n => n));
+            public Dictionary<int, int> LinqCopy() => new Dictionary<int, int>(data.Select(kvp => kvp));
 
             [Benchmark]
-            public HashSet<int> LoopCopy()
+            public Dictionary<int, int> LoopCopy()
             {
-                var copy = new HashSet<int>(data.Count);
+                var copy = new Dictionary<int, int>(data.Count);
                 var iter = data.GetEnumerator();
 
                 while (iter.MoveNext())
                 {
-                    copy.Add(iter.Current);
+                    copy.Add(iter.Current.Key, iter.Current.Value);
                 }
 
                 return copy;
             }
 
             [Benchmark]
-            public HashSet<int> IteratorCopy()
+            public Dictionary<int, int> IteratorCopy()
             {
-                var copy = new HashSet<int>(data.Count);
-                foreach (int value in data)
+                var copy = new Dictionary<int, int>(data.Count);
+                foreach (var kvp in data)
                 {
-                    copy.Add(value);
+                    copy.Add(kvp.Key, kvp.Value);
                 }
 
                 return copy;
@@ -274,43 +290,57 @@ namespace DictionaryBenchmarks
         public class MapDictionary
         {
             private const int N = 1_000_000;
-            private readonly HashSet<int> data;
+            private readonly Dictionary<int, int> data;
+            private readonly Consumer consumer;
 
             public MapDictionary()
             {
-                data = new HashSet<int>(Enumerable.Range(1, N));
+                consumer = new Consumer();
+                data = new Dictionary<int, int>(N);
+
+                for (int i = 0; i < N; i++)
+                {
+                    data.Add(i, i * 10);
+                }
             }
 
             [Benchmark]
-            public IEnumerable<int> LinqMap() => data.Select(n => n * n);
+            public void LinqMap() => data.Select(kvp => new KeyValuePair<int, int>(kvp.Key * 2, kvp.Value * 2)).Consume(consumer);
 
             [Benchmark]
-            public IEnumerable<int> LoopMap()
+            public void LoopMap()
             {
+                var result = new List<KeyValuePair<int, int>>(N);
                 var iter = data.GetEnumerator();
+
                 while (iter.MoveNext())
                 {
-                    yield return iter.Current * iter.Current;
+                    result.Add(new KeyValuePair<int, int>(iter.Current.Key * 2, iter.Current.Value * 2));
                 }
+
+                result.Consume(consumer);
             }
 
             [Benchmark]
-            public IEnumerable<int> IteratorMap()
+            public void IteratorMap()
             {
-                foreach (var value in data)
+                var result = new List<KeyValuePair<int, int>>(N);
+                foreach (var kvp in data)
                 {
-                    yield return value * value;
+                    result.Add(new KeyValuePair<int, int>(kvp.Key * 2, kvp.Value * 2));
                 }
+
+                result.Consume(consumer);
             }
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("--- DICTIONARY BENCHMARKS ---");
-            BenchmarkRunner.Run<PopulateDictionary>();
-            BenchmarkRunner.Run<IterateDictionary>();
-            BenchmarkRunner.Run<ContainsDictionary>();
-            BenchmarkRunner.Run<CopyDictionary>();
+            //BenchmarkRunner.Run<PopulateDictionary>();
+            //BenchmarkRunner.Run<IterateDictionary>();
+            //BenchmarkRunner.Run<ContainsDictionary>();
+            //BenchmarkRunner.Run<CopyDictionary>();
             BenchmarkRunner.Run<MapDictionary>();
             BenchmarkRunner.Run<FilterDictionary>();
             BenchmarkRunner.Run<ReduceDictionary>();

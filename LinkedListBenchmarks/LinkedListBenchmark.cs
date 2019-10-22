@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 using System.Linq;
@@ -187,10 +188,13 @@ namespace LinkedListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly LinkedList<int> data;
+        private readonly Consumer consumer;
 
         public FilterLinkedList()
         {
             var generator = new Random();
+
+            consumer = new Consumer();
             data = new LinkedList<int>();
 
             for (int i = 0; i < N; i++)
@@ -200,26 +204,34 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
+        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
-        public IEnumerable<int> LoopFilter()
+        public void LoopFilter()
         {
+            var result = new List<int>(N);
             var head = data.First;
+
             while(head != null)
             {
-                if (head.Value >= 0) yield return head.Value;
+                if (head.Value >= 0) result.Add(head.Value);
                 head = head.Next;
             }
+
+            result.Consume(consumer);
         }
 
         [Benchmark]
-        public IEnumerable<int> IteratorFilter()
+        public void IteratorFilter()
         {
+            var result = new List<int>(N);
+
             foreach (int value in data)
             {
-                if (value >= 0) yield return value;
+                if (value >= 0) result.Add(value);
             }
+
+            result.Consume(consumer);
         }
     }
 
@@ -268,33 +280,43 @@ namespace LinkedListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly LinkedList<int> data;
+        private readonly Consumer consumer;
 
         public MapLinkedList()
         {
+            consumer = new Consumer();
             data = new LinkedList<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqMap() => data.Select(n => n * n);
+        public void LinqMap() => data.Select(n => n * n).Consume(consumer);
 
         [Benchmark]
-        public IEnumerable<int> LoopMap()
+        public void LoopMap()
         {
+            var result = new List<int>(N);
             var head = data.First;
+
             while(head != null)
             {
-                yield return head.Value * head.Value;
+                result.Add(head.Value * head.Value);
                 head = head.Next;
             }
+
+            result.Consume(consumer);
         }
 
         [Benchmark]
-        public IEnumerable<int> IteratorMap()
+        public void IteratorMap()
         {
+            var result = new List<int>(N);
+
             foreach (var value in data)
             {
-                yield return value * value;
+                result.Add(value * value);
             }
+
+            result.Consume(consumer);
         }
     }
 
@@ -303,10 +325,10 @@ namespace LinkedListBenchmarks
         static void Main(string[] args)
         {
             Console.WriteLine("--- LINKED LIST BENCHMARKS ---");
-            BenchmarkRunner.Run<PopulateLinkedList>();
-            BenchmarkRunner.Run<IterateLinkedList>();
-            BenchmarkRunner.Run<ContainsLinkedList>();
-            BenchmarkRunner.Run<CopyLinkedList>();
+            //BenchmarkRunner.Run<PopulateLinkedList>();
+            //BenchmarkRunner.Run<IterateLinkedList>();
+            //BenchmarkRunner.Run<ContainsLinkedList>();
+            //BenchmarkRunner.Run<CopyLinkedList>();
             BenchmarkRunner.Run<MapLinkedList>();
             BenchmarkRunner.Run<FilterLinkedList>();
             BenchmarkRunner.Run<ReduceLinkedList>();

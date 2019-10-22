@@ -3,6 +3,7 @@ using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BenchmarkDotNet.Engines;
 
 namespace ListBenchmarks
 {
@@ -175,10 +176,13 @@ namespace ListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly List<int> data;
+        private readonly Consumer consumer;
 
         public FilterList()
         {
             var generator = new Random();
+
+            consumer = new Consumer();
             data = new List<int>(N);
 
             for (int i = 0; i < N; i++)
@@ -188,24 +192,32 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
+        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
-        public IEnumerable<int> LoopFilter()
+        public void LoopFilter()
         {
+            var result = new List<int>(N);
+
             for (int i = 0; i < data.Count; i++)
             {
-                if (data[i] >= 0) yield return data[i];
+                if (data[i] >= 0) result.Add(data[i]);
             }
+
+            result.Consume(consumer);
         }
 
         [Benchmark]
-        public IEnumerable<int> IteratorFilter()
+        public void IteratorFilter()
         {
+            var result = new List<int>(N);
+
             foreach (int value in data)
             {
-                if (value >= 0) yield return value;
+                if (value >= 0) result.Add(value);
             }
+
+            result.Consume(consumer);
         }
     }
 
@@ -251,31 +263,39 @@ namespace ListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly List<int> data;
+        private readonly Consumer consumer;
 
         public MapList()
         {
+            consumer = new Consumer();
             data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqMap() => data.Select(n => n * n);
+        public void LinqMap() => data.Select(n => n * n).Consume(consumer);
 
         [Benchmark]
-        public IEnumerable<int> LoopMap()
+        public void LoopMap()
         {
+            var result = new List<int>(N);
             for (int i = 0; i < data.Count; i++)
             {
-                yield return data[i] * data[i];
+                 result.Add(data[i] * data[i]);
             }
+
+            result.Consume(consumer);
         }
 
         [Benchmark]
-        public IEnumerable<int> IteratorMap()
+        public void IteratorMap()
         {
+            var result = new List<int>(N);
             foreach (var value in data)
             {
-                yield return value * value;
+                result.Add(value * value);
             }
+
+            result.Consume(consumer);
         }
     }
 
@@ -284,10 +304,10 @@ namespace ListBenchmarks
         static void Main(string[] args)
         {
             Console.WriteLine("--- LIST BENCHMARKS ---");
-            BenchmarkRunner.Run<PopulateList>();
-            BenchmarkRunner.Run<IterateList>();
-            BenchmarkRunner.Run<ContainsList>();
-            BenchmarkRunner.Run<CopyList>();
+            //BenchmarkRunner.Run<PopulateList>();
+            //BenchmarkRunner.Run<IterateList>();
+            //BenchmarkRunner.Run<ContainsList>();
+            //BenchmarkRunner.Run<CopyList>();
             BenchmarkRunner.Run<MapList>();
             BenchmarkRunner.Run<FilterList>();
             BenchmarkRunner.Run<ReduceList>();

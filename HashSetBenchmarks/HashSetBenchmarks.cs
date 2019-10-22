@@ -3,6 +3,7 @@ using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BenchmarkDotNet.Engines;
 
 namespace HashSetBenchmarks
 {
@@ -188,10 +189,13 @@ namespace HashSetBenchmarks
         {
             private const int N = 1_000_000;
             private readonly HashSet<int> data;
+            private readonly Consumer consumer;
 
             public FilterHashSet()
             {
                 var generator = new Random();
+
+                consumer = new Consumer();
                 data = new HashSet<int>(N);
 
                 while (data.Count < N)
@@ -202,25 +206,33 @@ namespace HashSetBenchmarks
             }
 
             [Benchmark]
-            public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
+            public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
 
             [Benchmark]
-            public IEnumerable<int> LoopFilter()
+            public void LoopFilter()
             {
+                var result = new List<int>(N);
                 var iter = data.GetEnumerator();
+
                 while (iter.MoveNext())
                 {
-                    if (iter.Current >= 0) yield return iter.Current;
+                    if (iter.Current >= 0) result.Add(iter.Current);
                 }
+
+                result.Consume(consumer);
             }
 
             [Benchmark]
-            public IEnumerable<int> IteratorFilter()
+            public void IteratorFilter()
             {
+                var result = new List<int>(N);
+
                 foreach (int value in data)
                 {
-                    if (value >= 0) yield return value;
+                    if (value >= 0) result.Add(value);
                 }
+
+                result.Consume(consumer);
             }
         }
 
@@ -268,32 +280,42 @@ namespace HashSetBenchmarks
         {
             private const int N = 1_000_000;
             private readonly HashSet<int> data;
+            private readonly Consumer consumer;
 
             public MapHashSet()
             {
+                consumer = new Consumer();
                 data = new HashSet<int>(Enumerable.Range(1, N));
             }
 
             [Benchmark]
-            public IEnumerable<int> LinqMap() => data.Select(n => n * n);
+            public void LinqMap() => data.Select(n => n * n).Consume(consumer);
 
             [Benchmark]
-            public IEnumerable<int> LoopMap()
+            public void LoopMap()
             {
+                var result = new List<int>(N);
                 var iter = data.GetEnumerator();
+
                 while (iter.MoveNext())
                 {
-                    yield return iter.Current * iter.Current;
+                    result.Add(iter.Current * iter.Current);
                 }
+
+                result.Consume(consumer);
             }
 
             [Benchmark]
-            public IEnumerable<int> IteratorMap()
+            public void IteratorMap()
             {
+                var result = new List<int>(N);
+
                 foreach (var value in data)
                 {
-                    yield return value * value;
+                    result.Add(value * value);
                 }
+
+                result.Consume(consumer);
             }
         }
 
@@ -304,9 +326,9 @@ namespace HashSetBenchmarks
             //BenchmarkRunner.Run<IterateHashSet>();
             //BenchmarkRunner.Run<ContainsHashSet>();
             //BenchmarkRunner.Run<CopyHashSet>();
-            //BenchmarkRunner.Run<MapHashSet>();
-            //BenchmarkRunner.Run<FilterHashSet>();
-            //BenchmarkRunner.Run<ReduceHashSet>();
+            BenchmarkRunner.Run<MapHashSet>();
+            BenchmarkRunner.Run<FilterHashSet>();
+            BenchmarkRunner.Run<ReduceHashSet>();
         }
     }
 }
