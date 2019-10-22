@@ -20,7 +20,7 @@ namespace ListBenchmarks
         public int LinqAggregate() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
-        public int ForLoopAggregate()
+        public int LoopAggregate()
         {
             int total = 0;
             for (int i = 0; i < data.Count; i++) total += data[i];
@@ -28,10 +28,14 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int ForEachAggregate()
+        public int IteratorAggregate()
         {
             int total = 0;
-            foreach (int value in data) total += value;
+            foreach (int value in data)
+            {
+                total += value;
+            }
+
             return total;
         }
     }
@@ -39,36 +43,44 @@ namespace ListBenchmarks
     public class PopulateList
     {
         private const int N = 1_000_000;
-        private readonly List<int> fillValues;
+        private readonly List<int> data;
 
         public PopulateList()
         {
             // Initialize pool of data to fill
-            fillValues = new List<int>(Enumerable.Range(1, N));
+            data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public List<int> LinqPopulate() => fillValues.Select(n => n).ToList();
+        public List<int> LinqPopulate()
+        {
+            var generator = new Random();
+            return data.Select(_ => generator.Next(1, 101)).ToList();
+        }
 
         [Benchmark]
-        public List<int> ForLoopPopulate()
+        public List<int> LoopPopulate()
         {
             var ForLoopData = new List<int>(N);
-            for (int i = 0; i < fillValues.Count; i++)
+            var generator = new Random();
+
+            for (int i = 0; i < data.Count; i++)
             {
-                ForLoopData.Add(fillValues[i]);
+                ForLoopData.Add(generator.Next(1, 101));
             }
 
             return ForLoopData;
         }
 
         [Benchmark]
-        public List<int> ForEachPopulate()
+        public List<int> IteratorPopulate()
         {
+            var generator = new Random();
             var ForEachData = new List<int>(N);
-            foreach (int value in fillValues)
+
+            foreach (int value in data)
             {
-                ForEachData.Add(value);
+                ForEachData.Add(generator.Next(1, 101));
             }
 
             return ForEachData;
@@ -78,37 +90,36 @@ namespace ListBenchmarks
     public class IterateList
     {
         private const int N = 1_000_000;
-        private readonly List<int> iterateValues;
-        private const int target = 1;
+        private readonly List<int> data;
 
         public IterateList()
         {
 
-            iterateValues = new List<int>(Enumerable.Repeat(1, N));
+            data = new List<int>(Enumerable.Repeat(1, N));
         }
 
         [Benchmark]
-        public int LinqIterate() => iterateValues.Count(n => n == target);
+        public int LinqIterate() => data.Count(n => n > 0);
 
         [Benchmark]
-        public int ForLoopIterate()
+        public int LoopIterate()
         {
             int count = 0;
-            for (int i = 0; i < iterateValues.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                if (iterateValues[i] == target) ++count;
+                if (data[i] > 0) ++count;
             }
 
             return count;
         }
 
         [Benchmark]
-        public int ForEachIterate()
+        public int IteratorIterate()
         {
             int count = 0;
-            foreach (int value in iterateValues)
+            foreach (int value in data)
             {
-                if(value == target) ++count;
+                if(value > 0) ++count;
             }
 
             return count;
@@ -119,38 +130,39 @@ namespace ListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly int target;
-        private readonly List<int> iterateValues;
+        private readonly List<int> data;
 
         public ContainsList()
         {
             var generator = new Random();
-            iterateValues = new List<int>(N);
+
+            data = new List<int>(N);
             target = generator.Next(1, 101);
 
-            for (int i = 0; i < N; i++)
+            while (data.Count < N)
             {
-                iterateValues.Add(generator.Next(1, 101));
+                data.Add(generator.Next(1, 101));
             }
         }
 
         [Benchmark]
-        public int LinqContains() => iterateValues.Find(n => n == target);
+        public int LinqContains() => data.Find(n => n == target);
 
         [Benchmark]
-        public int ForLoopContains()
+        public int LoopContains()
         {
-            for (int i = 0; i < iterateValues.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                if (iterateValues[i] == target) return iterateValues[i];
+                if (data[i] == target) return data[i];
             }
 
             return default;
         }
 
         [Benchmark]
-        public int ForEachContains()
+        public int IteratorContains()
         {
-            foreach (int value in iterateValues)
+            foreach (int value in data)
             {
                 if (value == target) return value;
             }
@@ -162,35 +174,35 @@ namespace ListBenchmarks
     public class FilterList
     {
         private const int N = 1_000_000;
-        private readonly List<int> filterValues;
+        private readonly List<int> data;
 
         public FilterList()
         {
             var generator = new Random();
-            filterValues = new List<int>(N);
+            data = new List<int>(N);
 
             for (int i = 0; i < N; i++)
             {
-                filterValues.Add(generator.Next(-100, 101));
+                data.Add(generator.Next(-N, N));
             }
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqFilter() => filterValues.Where(n => n >= 0);
+        public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
 
         [Benchmark]
-        public IEnumerable<int> ForLoopFilter()
+        public IEnumerable<int> LoopFilter()
         {
-            for (int i = 0; i < filterValues.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                if (filterValues[i] >= 0) yield return filterValues[i];
+                if (data[i] >= 0) yield return data[i];
             }
         }
 
         [Benchmark]
-        public IEnumerable<int> ForEachFilter()
+        public IEnumerable<int> IteratorFilter()
         {
-            foreach (int value in filterValues)
+            foreach (int value in data)
             {
                 if (value >= 0) yield return value;
             }
@@ -200,68 +212,67 @@ namespace ListBenchmarks
     public class CopyList
     {
         private const int N = 1_000_000;
-        private readonly List<int> valuesToCopy;
+        private readonly List<int> data;
 
         public CopyList()
         {
-            valuesToCopy = new List<int>(Enumerable.Range(1, N));
+            data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public List<int> LinqCopy() => valuesToCopy.Select(n => n).ToList();
+        public List<int> LinqCopy() => data.Select(n => n).ToList();
 
         [Benchmark]
-        public List<int> ForLoopCopy()
+        public List<int> LoopCopy()
         {
-            var result = new List<int>(valuesToCopy.Count);
-            for (int i = 0; i < valuesToCopy.Count; i++)
+            var copy = new List<int>(data.Count);
+            for (int i = 0; i < data.Count; i++)
             {
-                result.Add(valuesToCopy[i]);
+                copy.Add(data[i]);
             }
 
-            return result;
+            return copy;
         }
 
         [Benchmark]
-        public List<int> ForEachCopy()
+        public List<int> IteratorCopy()
         {
-            var result = new List<int>(valuesToCopy.Count);
-            foreach (int value in valuesToCopy)
+            var copy = new List<int>(data.Count);
+            foreach (int value in data)
             {
-                result.Add(value);
+                copy.Add(value);
             }
 
-            return result;
+            return copy;
         }
     }
 
     public class MapList
     {
         private const int N = 1_000_000;
-        private readonly List<int> originalValues;
+        private readonly List<int> data;
 
         public MapList()
         {
-            originalValues = new List<int>(Enumerable.Range(1, N));
+            data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqMapInteger() => originalValues.Select(n => n * n);
+        public IEnumerable<int> LinqMap() => data.Select(n => n * n);
 
         [Benchmark]
-        public IEnumerable<int> ForLoopMapInteger()
+        public IEnumerable<int> LoopMap()
         {
-            for (int i = 0; i < originalValues.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                var value = originalValues[i];
-                yield return value * value;
+                yield return data[i] * data[i];
             }
         }
 
         [Benchmark]
-        public IEnumerable<int> ForEachMapInteger()
+        public IEnumerable<int> IteratorMap()
         {
-            foreach (var value in originalValues)
+            foreach (var value in data)
             {
                 yield return value * value;
             }

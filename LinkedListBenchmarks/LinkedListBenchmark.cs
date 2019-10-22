@@ -9,23 +9,23 @@ namespace LinkedListBenchmarks
     public class ReduceLinkedList
     {
         private const int N = 1_000_000;
-        private readonly LinkedList<int> list;
+        private readonly LinkedList<int> data;
 
         public ReduceLinkedList()
         {
-            list = new LinkedList<int>(Enumerable.Range(1, N));
+            data = new LinkedList<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public int LinqAggregate() => list.Aggregate((total, num) => total + num);
+        public int LinqAggregate() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
-        public int ForLoopAggregate()
+        public int LoopAggregate()
         {
             int total = 0;
-            var head = list.First;
+            var head = data.First;
 
-            for (int i = 0; i < list.Count; i++)
+            while (head != null)
             {
                 total += head.Value;
                 head = head.Next;
@@ -35,10 +35,14 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public int ForEachAggregate()
+        public int IteratorAggregate()
         {
             int total = 0;
-            foreach (int value in list) total += value;
+            foreach (int value in data)
+            {
+                total += value;
+            }
+
             return total;
         }
     }
@@ -46,42 +50,42 @@ namespace LinkedListBenchmarks
     public class PopulateLinkedList
     {
         private const int N = 1_000_000;
-        private readonly List<int> Range;
+        private readonly List<int> data;
 
         public PopulateLinkedList()
         {
             // Initialize range to iterate
-            Range = new List<int>(Enumerable.Range(1, N));
+            data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
         public LinkedList<int> LinqPopulate()
         {
             var generator = new Random();
-            return new LinkedList<int>(Range.Select(_ => generator.Next(1, 101)));
+            return new LinkedList<int>(data.Select(_ => generator.Next(1, 101)));
         }
 
         [Benchmark]
-        public LinkedList<int> ForLoopPopulate()
+        public LinkedList<int> LoopPopulate()
         {
             var generator = new Random();
-            var ForLoopData = new LinkedList<int>();
+            var list = new LinkedList<int>();
 
-            for (int i = 0; i < Range.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                ForLoopData.AddLast(generator.Next(1, 101));
+                list.AddLast(generator.Next(1, 101));
             }
 
-            return ForLoopData;
+            return list;
         }
 
         [Benchmark]
-        public LinkedList<int> ForEachPopulate()
+        public LinkedList<int> IteratorPopulate()
         {
             var generator = new Random();
             var ForEachData = new LinkedList<int>();
 
-            foreach (int value in Range)
+            foreach (int value in data)
             {
                 ForEachData.AddLast(generator.Next(1, 101));
             }
@@ -93,25 +97,25 @@ namespace LinkedListBenchmarks
     public class IterateLinkedList
     {
         private const int N = 1_000_000;
-        private const int target = 1;
-        private readonly LinkedList<int> iterateValues;
+        private readonly LinkedList<int> data;
 
         public IterateLinkedList()
         {
-            iterateValues = new LinkedList<int>(Enumerable.Repeat(1, N));
+            data = new LinkedList<int>(Enumerable.Repeat(1, N));
         }
 
         [Benchmark]
-        public int LinqIterate() => iterateValues.Count(n => n == target);
+        public int LinqIterate() => data.Count(n => n > 0);
 
         [Benchmark]
-        public int ForLoopIterate()
+        public int LoopIterate()
         {
             int counter = 0;
-            var head = iterateValues.First;
-            for (int i = 0; i < iterateValues.Count; i++)
+            var head = data.First;
+
+            while (head != null)
             {
-                if (head.Value == target) ++counter;
+                if(head.Value > 0) ++counter;
                 head = head.Next;
             }
 
@@ -119,12 +123,12 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public int ForEachIterate()
+        public int IteratorIterate()
         {
             int counter = 0;
-            foreach (int value in iterateValues)
+            foreach (int value in data)
             {
-                if(value == target) ++counter;
+                if (value > 0) ++counter;
             }
 
             return counter;
@@ -135,28 +139,30 @@ namespace LinkedListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly int target;
-        private readonly LinkedList<int> iterateValues;
+        private readonly LinkedList<int> data;
 
         public ContainsLinkedList()
         {
             var generator = new Random();
-            iterateValues = new LinkedList<int>();
-            target = generator.Next(1, 101);
 
-            for (int i = 0; i < N; i++)
+            data = new LinkedList<int>();
+            target = generator.Next(1, 101);
+            
+            while(data.Count < N)
             {
-                iterateValues.AddLast(generator.Next(1, 101));
+                data.AddLast(generator.Next(1, 101));
             }
         }
 
         [Benchmark]
-        public int LinqContains() => iterateValues.First(n => n == target);
+        public int LinqContains() => data.First(n => n == target);
 
         [Benchmark]
-        public int ForLoopContains()
+        public int LoopContains()
         {
-            var head = iterateValues.First;
-            for (int i = 0; i < iterateValues.Count; i++)
+            var head = data.First;
+
+            while (head != null)
             {
                 if (head.Value == target) return head.Value;
                 head = head.Next;
@@ -166,9 +172,9 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public int ForEachContains()
+        public int IteratorContains()
         {
-            foreach (int value in iterateValues)
+            foreach (int value in data)
             {
                 if (value == target) return value;
             }
@@ -180,27 +186,27 @@ namespace LinkedListBenchmarks
     public class FilterLinkedList
     {
         private const int N = 1_000_000;
-        private readonly LinkedList<int> filterValues;
+        private readonly LinkedList<int> data;
 
         public FilterLinkedList()
         {
             var generator = new Random();
-            filterValues = new LinkedList<int>();
+            data = new LinkedList<int>();
 
             for (int i = 0; i < N; i++)
             {
-                filterValues.AddLast(generator.Next(-100, 101));
+                data.AddLast(generator.Next(-N, N));
             }
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqFilter() => filterValues.Where(n => n >= 0);
+        public IEnumerable<int> LinqFilter() => data.Where(n => n >= 0);
 
         [Benchmark]
-        public IEnumerable<int> ForLoopFilter()
+        public IEnumerable<int> LoopFilter()
         {
-            var head = filterValues.First;
-            for (int i = 0; i < filterValues.Count; i++)
+            var head = data.First;
+            while(head != null)
             {
                 if (head.Value >= 0) yield return head.Value;
                 head = head.Next;
@@ -208,9 +214,9 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public IEnumerable<int> ForEachFilter()
+        public IEnumerable<int> IteratorFilter()
         {
-            foreach (int value in filterValues)
+            foreach (int value in data)
             {
                 if (value >= 0) yield return value;
             }
@@ -220,62 +226,62 @@ namespace LinkedListBenchmarks
     public class CopyLinkedList
     {
         private const int N = 1_000_000;
-        private readonly LinkedList<int> valuesToCopy;
+        private readonly LinkedList<int> data;
 
         public CopyLinkedList()
         {
-            valuesToCopy = new LinkedList<int>(Enumerable.Range(1, N));
+            data = new LinkedList<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public LinkedList<int> LinqCopy() => new LinkedList<int>(valuesToCopy.Select(n => n));
+        public LinkedList<int> LinqCopy() => new LinkedList<int>(data.Select(n => n));
 
         [Benchmark]
-        public LinkedList<int> ForLoopCopy()
+        public LinkedList<int> LoopCopy()
         {
-            var result = new LinkedList<int>();
-            var head = valuesToCopy.First;
+            var copy = new LinkedList<int>();
+            var head = data.First;
 
-            for (int i = 0; i < valuesToCopy.Count; i++)
+            while(head != null)
             {
-                result.AddLast(head.Value);
+                copy.AddLast(head.Value);
                 head = head.Next;
             }
 
-            return result;
+            return copy;
         }
 
         [Benchmark]
-        public LinkedList<int> ForEachCopy()
+        public LinkedList<int> IteratorCopy()
         {
-            var result = new LinkedList<int>();
-            foreach (int value in valuesToCopy)
+            var copy = new LinkedList<int>();
+            foreach (int value in data)
             {
-                result.AddLast(value);
+                copy.AddLast(value);
             }
 
-            return result;
+            return copy;
         }
     }
 
     public class MapLinkedList
     {
         private const int N = 1_000_000;
-        private readonly LinkedList<int> originalValues;
+        private readonly LinkedList<int> data;
 
         public MapLinkedList()
         {
-            originalValues = new LinkedList<int>(Enumerable.Range(1, N));
+            data = new LinkedList<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public IEnumerable<int> LinqMapInteger() => originalValues.Select(n => n * n);
+        public IEnumerable<int> LinqMap() => data.Select(n => n * n);
 
         [Benchmark]
-        public IEnumerable<int> ForLoopMapInteger()
+        public IEnumerable<int> LoopMap()
         {
-            var head = originalValues.First;
-            for (int i = 0; i < originalValues.Count; i++)
+            var head = data.First;
+            while(head != null)
             {
                 yield return head.Value * head.Value;
                 head = head.Next;
@@ -283,9 +289,9 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public IEnumerable<int> ForEachMapInteger()
+        public IEnumerable<int> IteratorMap()
         {
-            foreach (var value in originalValues)
+            foreach (var value in data)
             {
                 yield return value * value;
             }
