@@ -69,19 +69,19 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public LinkedList<long> LinqPopulate()
         {
-            var generator = new Random();
-            return new LinkedList<long>(data.Select(_ => (long)generator.Next(1, 101) * N));
+            var rnd = new Random();
+            return new LinkedList<long>(data.Select(_ => (long)rnd.Next(1, 101) * N));
         }
 
         [Benchmark]
         public LinkedList<long> LoopPopulate()
         {
-            var generator = new Random();
+            var rnd = new Random();
             var result = new LinkedList<long>();
 
             for (int i = 0; i < data.Count; i++)
             {
-                result.AddLast(generator.Next(1, 101) * N);
+                result.AddLast(rnd.Next(1, 101) * N);
             }
 
             return result;
@@ -90,12 +90,12 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public LinkedList<long> IteratorPopulate()
         {
-            var generator = new Random();
+            var rnd = new Random();
             var result = new LinkedList<long>();
 
             foreach (long value in data)
             {
-                result.AddLast(generator.Next(1, 101) * N);
+                result.AddLast(rnd.Next(1, 101) * N);
             }
 
             return result;
@@ -155,14 +155,14 @@ namespace LinkedListBenchmarks
 
         public ContainsInt64()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             data = new LinkedList<long>();
-            target = generator.Next(1, 101) * N;
+            target = rnd.Next(1, 101) * N;
 
             while (data.Count < N)
             {
-                data.AddLast(generator.Next(1, 101) * N);
+                data.AddLast(rnd.Next(1, 101) * N);
             }
         }
 
@@ -203,14 +203,14 @@ namespace LinkedListBenchmarks
 
         public FilterInt64()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             consumer = new Consumer();
             data = new LinkedList<long>();
 
             for (int i = 0; i < N; i++)
             {
-                data.AddLast(generator.Next(-N, N));
+                data.AddLast(rnd.Next(-N, N));
             }
         }
 
@@ -220,7 +220,7 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public void LoopFilter()
         {
-            var result = new List<long>(N);
+            var result = new List<long>();
             var head = data.First;
 
             while (head != null)
@@ -235,7 +235,7 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public void IteratorFilter()
         {
-            var result = new List<long>(N);
+            var result = new List<long>();
 
             foreach (long value in data)
             {

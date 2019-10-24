@@ -150,15 +150,15 @@ namespace HashSetBenchmarks
 
         public ContainsInt64()
         {
-            var generator = new Random();
-            var temp = generator.Next(-N, N);
+            var rnd = new Random();
+            var temp = rnd.Next(-N, N);
 
             data = new HashSet<long>(N);
             target = temp * temp;
 
             while (data.Count < N)
             {
-                long value = generator.Next(-N, N);
+                long value = rnd.Next(-N, N);
                 if (!data.Contains(value)) data.Add(value);
             }
         }
@@ -200,14 +200,14 @@ namespace HashSetBenchmarks
 
         public FilterInt64()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             consumer = new Consumer();
             data = new HashSet<long>(N);
 
             while (data.Count < N)
             {
-                var value = generator.Next(-N, N);
+                var value = rnd.Next(-N, N);
                 if (!data.Contains(value)) data.Add(value);
             }
         }
@@ -218,7 +218,7 @@ namespace HashSetBenchmarks
         [Benchmark]
         public void LoopFilter()
         {
-            var result = new List<long>(N);
+            var result = new List<long>();
             var iter = data.GetEnumerator();
 
             while (iter.MoveNext())
@@ -232,7 +232,7 @@ namespace HashSetBenchmarks
         [Benchmark]
         public void IteratorFilter()
         {
-            var result = new List<long>(N);
+            var result = new List<long>();
 
             foreach (long value in data)
             {

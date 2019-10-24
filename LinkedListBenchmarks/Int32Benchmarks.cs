@@ -62,19 +62,19 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public LinkedList<int> LinqPopulate()
         {
-            var generator = new Random();
-            return new LinkedList<int>(data.Select(_ => generator.Next(1, 101)));
+            var rnd = new Random();
+            return new LinkedList<int>(data.Select(_ => rnd.Next(1, 101)));
         }
 
         [Benchmark]
         public LinkedList<int> LoopPopulate()
         {
-            var generator = new Random();
+            var rnd = new Random();
             var list = new LinkedList<int>();
 
             for (int i = 0; i < data.Count; i++)
             {
-                list.AddLast(generator.Next(1, 101));
+                list.AddLast(rnd.Next(1, 101));
             }
 
             return list;
@@ -83,12 +83,12 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public LinkedList<int> IteratorPopulate()
         {
-            var generator = new Random();
+            var rnd = new Random();
             var ForEachData = new LinkedList<int>();
 
             foreach (int value in data)
             {
-                ForEachData.AddLast(generator.Next(1, 101));
+                ForEachData.AddLast(rnd.Next(1, 101));
             }
 
             return ForEachData;
@@ -144,14 +144,14 @@ namespace LinkedListBenchmarks
 
         public ContainsInt32()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             data = new LinkedList<int>();
-            target = generator.Next(1, 101);
+            target = rnd.Next(1, 101);
 
             while (data.Count < N)
             {
-                data.AddLast(generator.Next(1, 101));
+                data.AddLast(rnd.Next(1, 101));
             }
         }
 
@@ -192,14 +192,14 @@ namespace LinkedListBenchmarks
 
         public FilterInt32()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             consumer = new Consumer();
             data = new LinkedList<int>();
 
             for (int i = 0; i < N; i++)
             {
-                data.AddLast(generator.Next(-N, N));
+                data.AddLast(rnd.Next(-N, N));
             }
         }
 
@@ -209,7 +209,7 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public void LoopFilter()
         {
-            var result = new List<int>(N);
+            var result = new List<int>();
             var head = data.First;
 
             while (head != null)
@@ -224,7 +224,7 @@ namespace LinkedListBenchmarks
         [Benchmark]
         public void IteratorFilter()
         {
-            var result = new List<int>(N);
+            var result = new List<int>();
 
             foreach (int value in data)
             {

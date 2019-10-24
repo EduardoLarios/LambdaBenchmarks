@@ -59,19 +59,19 @@ namespace ListBenchmarks
         [Benchmark]
         public List<int> LinqPopulate()
         {
-            var generator = new Random();
-            return data.Select(_ => generator.Next(1, 101)).ToList();
+            var rnd = new Random();
+            return data.Select(_ => rnd.Next(1, 101)).ToList();
         }
 
         [Benchmark]
         public List<int> LoopPopulate()
         {
             var result = new List<int>(N);
-            var generator = new Random();
+            var rnd = new Random();
 
             for (int i = 0; i < data.Count; i++)
             {
-                result.Add(generator.Next(1, 101));
+                result.Add(rnd.Next(1, 101));
             }
 
             return result;
@@ -80,12 +80,12 @@ namespace ListBenchmarks
         [Benchmark]
         public List<int> IteratorPopulate()
         {
-            var generator = new Random();
+            var rnd = new Random();
             var result = new List<int>(N);
 
             foreach (int value in data)
             {
-                result.Add(generator.Next(1, 101));
+                result.Add(rnd.Next(1, 101));
             }
 
             return result;
@@ -139,14 +139,14 @@ namespace ListBenchmarks
 
         public ContainsInt32()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             data = new List<int>(N);
-            target = generator.Next(1, 101);
+            target = rnd.Next(1, 101);
 
             while (data.Count < N)
             {
-                data.Add(generator.Next(1, 101));
+                data.Add(rnd.Next(1, 101));
             }
         }
 
@@ -184,14 +184,14 @@ namespace ListBenchmarks
 
         public FilterInt32()
         {
-            var generator = new Random();
+            var rnd = new Random();
 
             consumer = new Consumer();
             data = new List<int>(N);
 
             for (int i = 0; i < N; i++)
             {
-                data.Add(generator.Next(-N, N));
+                data.Add(rnd.Next(-N, N));
             }
         }
 
@@ -201,7 +201,7 @@ namespace ListBenchmarks
         [Benchmark]
         public void LoopFilter()
         {
-            var result = new List<int>(N);
+            var result = new List<int>();
 
             for (int i = 0; i < data.Count; i++)
             {
@@ -214,7 +214,7 @@ namespace ListBenchmarks
         [Benchmark]
         public void IteratorFilter()
         {
-            var result = new List<int>(N);
+            var result = new List<int>();
 
             foreach (int value in data)
             {
