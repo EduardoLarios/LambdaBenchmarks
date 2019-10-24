@@ -16,9 +16,10 @@ namespace LinkedListBenchmarks
             //BenchmarkRunner.Run<IterateLinkedList>();
             //BenchmarkRunner.Run<ContainsLinkedList>();
             //BenchmarkRunner.Run<CopyLinkedList>();
-            BenchmarkRunner.Run<MapInt32>();
-            BenchmarkRunner.Run<FilterInt32>();
-            BenchmarkRunner.Run<ReduceInt32>();
+            //BenchmarkRunner.Run<MapInt32>();
+            //BenchmarkRunner.Run<FilterInt32>();
+            //BenchmarkRunner.Run<ReduceInt32>();
+            BenchmarkRunner.Run<CopyStudent>();
         }
     }
 }

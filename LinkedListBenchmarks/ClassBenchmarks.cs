@@ -3,10 +3,10 @@ using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Text;
+using System;
 
-namespace ListBenchmarks
+namespace LinkedListBenchmarks
 {
     public class Student
     {
@@ -19,7 +19,7 @@ namespace ListBenchmarks
     public class ReduceStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly LinkedList<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -77,11 +77,11 @@ namespace ListBenchmarks
         public ReduceStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new LinkedList<Student>();
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                students.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
@@ -99,7 +99,7 @@ namespace ListBenchmarks
                 (
                     "{0}, {1} - {2}",
                     n.lastName,
-                    n.lastName,
+                    n.firstName,
                     (n.average > 60) ? n.average.ToString() : "Failed"
                 ),
                 sb => sb.ToString());
@@ -108,15 +108,20 @@ namespace ListBenchmarks
         public string LoopAggregate()
         {
             var builder = new StringBuilder(students.Count);
-            for (int i = 0; i < students.Count; i++)
+            var head = students.First;
+
+            while(head != null)
             {
+                var student = head.Value;
                 builder.AppendFormat
                     (
                         "{0}, {1} - {2}",
-                        students[i].lastName,
-                        students[i].firstName,
-                        (students[i].average > 60) ? students[i].average.ToString() : "Failed"
+                        student.lastName,
+                        student.firstName,
+                        (student.average > 60) ? student.average.ToString() : "Failed"
                     );
+
+                head = head.Next;
             }
 
             return builder.ToString();
@@ -205,27 +210,29 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqPopulate()
+        public LinkedList<Student> LinqPopulate()
         {
             var rnd = new Random();
-            return students.Select(n => new Student()
+            var init = students.Select(n => new Student()
             {
                 average = rnd.Next(50, 101),
                 ID = n * N,
                 firstName = firstNames[rnd.Next(0, firstNames.Count)],
                 lastName = lastNames[rnd.Next(0, lastNames.Count)]
-            }).ToList();
+            });
+
+            return new LinkedList<Student>(init);
         }
 
         [Benchmark]
-        public List<Student> LoopPopulate()
+        public LinkedList<Student> LoopPopulate()
         {
             var rnd = new Random();
-            var result = new List<Student>(N);
+            var result = new LinkedList<Student>();
 
             for (int i = 1; i <= N; i++)
             {
-                result.Add(new Student()
+                result.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
@@ -238,14 +245,14 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> IteratorPopulate()
+        public LinkedList<Student> IteratorPopulate()
         {
             var rnd = new Random();
-            var result = new List<Student>(N);
+            var result = new LinkedList<Student>();
 
             foreach (var n in students)
             {
-                result.Add(new Student()
+                result.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = n * N,
@@ -261,7 +268,7 @@ namespace ListBenchmarks
     public class IterateStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly LinkedList<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -319,11 +326,11 @@ namespace ListBenchmarks
         public IterateStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new LinkedList<Student>();
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                students.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
@@ -340,16 +347,19 @@ namespace ListBenchmarks
         public int LoopIterate()
         {
             int count = 0;
+            var head = students.First;
             static bool valid(int len, int avg, long id) => len > 0 && avg >= 50 && id < long.MaxValue;
 
-            for (int i = 0; i < students.Count; i++)
+            while(head != null)
             {
-                var s = students[i];
+                var s = head.Value;
 
                 if (valid(s.firstName.Length, s.average, s.ID))
                 {
                     count++;
                 }
+
+                head = head.Next;
             }
 
             return count;
@@ -486,7 +496,7 @@ namespace ListBenchmarks
         private const int N = 1_000_000;
         private readonly int target;
         private readonly Consumer consumer;
-        private readonly List<Student> students;
+        private readonly LinkedList<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -545,13 +555,13 @@ namespace ListBenchmarks
         {
             var rnd = new Random();
 
-            students = new List<Student>(N);
+            students = new LinkedList<Student>();
             consumer = new Consumer();
             target = rnd.Next(1, N / 2);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                students.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
@@ -568,13 +578,17 @@ namespace ListBenchmarks
         public void LoopFilter()
         {
             var result = new List<Student>();
-            for (int i = 0; i < students.Count; i++)
+            var head = students.First;
+
+            while(head != null)
             {
-                var s = students[i];
+                var s = head.Value;
                 if (s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target)
                 {
                     result.Add(s);
                 }
+
+                head = head.Next;
             }
 
             result.Consume(consumer);
@@ -599,7 +613,7 @@ namespace ListBenchmarks
     public class CopyStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly LinkedList<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -658,11 +672,11 @@ namespace ListBenchmarks
         {
             var rnd = new Random();
 
-            students = new List<Student>(N);
+            students = new LinkedList<Student>();
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                students.AddLast(new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
@@ -673,33 +687,38 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqCopy() => students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }).ToList();
+        public LinkedList<Student> LinqCopy() => new LinkedList<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
 
         [Benchmark]
-        public List<Student> LoopCopy()
+        public LinkedList<Student> LoopCopy()
         {
-            var copy = new List<Student>(students.Count);
-            for(int i = 0; i < students.Count; i++)
+            var copy = new LinkedList<Student>();
+            var head = students.First;
+
+            while(head != null)
             {
-                copy.Add(new Student()
+                var student = head.Value;
+                copy.AddLast(new Student()
                 {
-                    average = students[i].average,
-                    ID = students[i].ID,
-                    firstName = students[i].firstName,
-                    lastName = students[i].lastName
+                    average = student.average,
+                    ID = student.ID,
+                    firstName = student.firstName,
+                    lastName = student.lastName
                 });
+
+                head = head.Next;
             }
 
             return copy;
         }
 
         [Benchmark]
-        public List<Student> IteratorCopy()
+        public LinkedList<Student> IteratorCopy()
         {
-            var copy = new List<Student>(students.Count);
+            var copy = new LinkedList<Student>();
             foreach (var s in students)
             {
-                copy.Add(new Student()
+                copy.AddLast(new Student()
                 {
                     average = s.average,
                     ID = s.ID,
@@ -712,107 +731,5 @@ namespace ListBenchmarks
         }
     }
 
-    public class MapStudent
-    {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
 
-        public MapStudent()
-        {
-            var rnd = new Random();
-
-            students = new List<Student>(N);
-
-            for (int i = 1; i <= N; i++)
-            {
-                students.Add(new Student()
-                {
-                    average = rnd.Next(50, 101),
-                    ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
-            }
-        }
-
-        [Benchmark]
-        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
-
-        [Benchmark]
-        public Dictionary<long, string> LoopMap()
-        {
-            var result = new Dictionary<long, string>(students.Count);
-            for (int i = 0; i < students.Count; i++)
-            {
-                result.Add(students[i].ID, $"{students[i].lastName}, {students[i].firstName}");
-            }
-
-            return result;
-        }
-
-        [Benchmark]
-        public Dictionary<long, string> IteratorMap()
-        {
-            var result = new Dictionary<long, string>(students.Count);
-            foreach (var s in students)
-            {
-                result.Add(s.ID, $"{s.lastName}, {s.firstName}");
-            }
-
-            return result;
-        }
-    }
 }
