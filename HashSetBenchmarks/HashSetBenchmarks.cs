@@ -16,9 +16,10 @@ namespace HashSetBenchmarks
             //BenchmarkRunner.Run<IterateHashSet>();
             //BenchmarkRunner.Run<ContainsHashSet>();
             //BenchmarkRunner.Run<CopyHashSet>();
-            BenchmarkRunner.Run<MapInt64>();
-            BenchmarkRunner.Run<FilterInt64>();
-            BenchmarkRunner.Run<ReduceInt64>();
+            //BenchmarkRunner.Run<MapInt64>();
+            //BenchmarkRunner.Run<FilterInt64>();
+            //BenchmarkRunner.Run<ReduceInt64>();
+            BenchmarkRunner.Run<MapStudent>();
         }
     }
 }

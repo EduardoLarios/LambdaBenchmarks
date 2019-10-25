@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System;
 
-namespace ListBenchmarks
+namespace HashSetBenchmarks
 {
     public class Student
     {
@@ -19,7 +19,7 @@ namespace ListBenchmarks
     public class ReduceStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -77,7 +77,7 @@ namespace ListBenchmarks
         public ReduceStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
@@ -95,12 +95,12 @@ namespace ListBenchmarks
         public string LinqAggregate() =>
             students.Aggregate(
                 new StringBuilder(),
-                (sb, n) => sb.AppendFormat
+                (sb, s) => sb.AppendFormat
                 (
                     "{0}, {1} - {2}",
-                    n.lastName,
-                    n.firstName,
-                    (n.average > 60) ? n.average.ToString() : "Failed"
+                    s.lastName,
+                    s.firstName,
+                    (s.average > 60) ? s.average.ToString() : "Failed"
                 ),
                 sb => sb.ToString());
 
@@ -108,14 +108,17 @@ namespace ListBenchmarks
         public string LoopAggregate()
         {
             var builder = new StringBuilder(students.Count);
-            for (int i = 0; i < students.Count; i++)
+            var iter = students.GetEnumerator();
+
+            while (iter.MoveNext())
             {
+                var student = iter.Current;
                 builder.AppendFormat
                     (
                         "{0}, {1} - {2}",
-                        students[i].lastName,
-                        students[i].firstName,
-                        (students[i].average > 60) ? students[i].average.ToString() : "Failed"
+                        student.lastName,
+                        student.firstName,
+                        (student.average > 60) ? student.average.ToString() : "Failed"
                     );
             }
 
@@ -205,23 +208,25 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqPopulate()
+        public HashSet<Student> LinqPopulate()
         {
             var rnd = new Random();
-            return students.Select(n => new Student()
+            var init = students.Select(s => new Student()
             {
                 average = rnd.Next(50, 101),
-                ID = n * N,
+                ID = s * N,
                 firstName = firstNames[rnd.Next(0, firstNames.Count)],
                 lastName = lastNames[rnd.Next(0, lastNames.Count)]
-            }).ToList();
+            });
+
+            return new HashSet<Student>(init);
         }
 
         [Benchmark]
-        public List<Student> LoopPopulate()
+        public HashSet<Student> LoopPopulate()
         {
             var rnd = new Random();
-            var result = new List<Student>(N);
+            var result = new HashSet<Student>();
 
             for (int i = 1; i <= N; i++)
             {
@@ -238,17 +243,17 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> IteratorPopulate()
+        public HashSet<Student> IteratorPopulate()
         {
             var rnd = new Random();
-            var result = new List<Student>(N);
+            var result = new HashSet<Student>();
 
-            foreach (var n in students)
+            foreach (var s in students)
             {
                 result.Add(new Student()
                 {
                     average = rnd.Next(50, 101),
-                    ID = n * N,
+                    ID = s * N,
                     firstName = firstNames[rnd.Next(0, firstNames.Count)],
                     lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
@@ -261,7 +266,7 @@ namespace ListBenchmarks
     public class IterateStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -319,7 +324,7 @@ namespace ListBenchmarks
         public IterateStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
@@ -334,18 +339,18 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int LinqIterate() => students.Count(n => n.firstName.Length > 0 && n.average >= 50 && n.ID < long.MaxValue);
+        public int LinqIterate() => students.Count(s => s.firstName.Length > 0 && s.average >= 50 && s.ID < long.MaxValue);
 
         [Benchmark]
         public int LoopIterate()
         {
             int count = 0;
+            var iter = students.GetEnumerator();
             static bool valid(int len, int avg, long id) => len > 0 && avg >= 50 && id < long.MaxValue;
 
-            for (int i = 0; i < students.Count; i++)
+            while (iter.MoveNext())
             {
-                var s = students[i];
-
+                var s = iter.Current;
                 if (valid(s.firstName.Length, s.average, s.ID))
                 {
                     count++;
@@ -376,7 +381,7 @@ namespace ListBenchmarks
     public class ContainsStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -434,7 +439,7 @@ namespace ListBenchmarks
         public ContainsStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
@@ -449,14 +454,16 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public Student LinqContains() => students.Find(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
+        public Student LinqContains() => students.First(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
 
         [Benchmark]
         public Student LoopContains()
         {
-            for (int i = 0; i < students.Count; i++)
+            var iter = students.GetEnumerator();
+
+            while(iter.MoveNext())
             {
-                var s = students[i];
+                var s = iter.Current;
                 if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
                 {
                     return s;
@@ -486,7 +493,7 @@ namespace ListBenchmarks
         private const int N = 1_000_000;
         private readonly int target;
         private readonly Consumer consumer;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -545,7 +552,7 @@ namespace ListBenchmarks
         {
             var rnd = new Random();
 
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
             consumer = new Consumer();
             target = rnd.Next(1, N / 2);
 
@@ -568,9 +575,11 @@ namespace ListBenchmarks
         public void LoopFilter()
         {
             var result = new List<Student>();
-            for (int i = 0; i < students.Count; i++)
+            var iter = students.GetEnumerator();
+
+            while(iter.MoveNext())
             {
-                var s = students[i];
+                var s = iter.Current;
                 if (s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target)
                 {
                     result.Add(s);
@@ -599,7 +608,7 @@ namespace ListBenchmarks
     public class CopyStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -658,7 +667,7 @@ namespace ListBenchmarks
         {
             var rnd = new Random();
 
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
@@ -673,20 +682,23 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqCopy() => students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }).ToList();
+        public HashSet<Student> LinqCopy() => new HashSet<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
 
         [Benchmark]
-        public List<Student> LoopCopy()
+        public HashSet<Student> LoopCopy()
         {
-            var copy = new List<Student>(students.Count);
-            for(int i = 0; i < students.Count; i++)
+            var copy = new HashSet<Student>(students.Count);
+            var iter = students.GetEnumerator();
+
+            while(iter.MoveNext())
             {
+                var student = iter.Current;
                 copy.Add(new Student()
                 {
-                    average = students[i].average,
-                    ID = students[i].ID,
-                    firstName = students[i].firstName,
-                    lastName = students[i].lastName
+                    average = student.average,
+                    ID = student.ID,
+                    firstName = student.firstName,
+                    lastName = student.lastName
                 });
             }
 
@@ -694,17 +706,17 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> IteratorCopy()
+        public HashSet<Student> IteratorCopy()
         {
-            var copy = new List<Student>(students.Count);
-            foreach (var s in students)
+            var copy = new HashSet<Student>(students.Count);
+            foreach (var student in students)
             {
                 copy.Add(new Student()
                 {
-                    average = s.average,
-                    ID = s.ID,
-                    firstName = s.firstName,
-                    lastName = s.lastName
+                    average = student.average,
+                    ID = student.ID,
+                    firstName = student.firstName,
+                    lastName = student.lastName
                 });
             }
 
@@ -715,7 +727,7 @@ namespace ListBenchmarks
     public class MapStudent
     {
         private const int N = 1_000_000;
-        private readonly List<Student> students;
+        private readonly HashSet<Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -773,7 +785,7 @@ namespace ListBenchmarks
         public MapStudent()
         {
             var rnd = new Random();
-            students = new List<Student>(N);
+            students = new HashSet<Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
@@ -794,9 +806,12 @@ namespace ListBenchmarks
         public Dictionary<long, string> LoopMap()
         {
             var result = new Dictionary<long, string>(students.Count);
-            for (int i = 0; i < students.Count; i++)
+            var iter = students.GetEnumerator();
+
+            while(iter.MoveNext())
             {
-                result.Add(students[i].ID, $"{students[i].lastName}, {students[i].firstName}");
+                var student = iter.Current;
+                result.Add(student.ID, $"{student.lastName}, {student.firstName}");
             }
 
             return result;

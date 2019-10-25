@@ -1,4 +1,6 @@
-﻿DictionaryBenchmarks/obj
+﻿DictionaryBenchmarks/bin
+DictionaryBenchmarks/obj
+HashSetBenchmarks/bin
 HashSetBenchmarks/obj
 LinkedListBenchmarks/bin
 LinkedListBenchmarks/obj

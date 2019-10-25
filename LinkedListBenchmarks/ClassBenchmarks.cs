@@ -731,5 +731,111 @@ namespace LinkedListBenchmarks
         }
     }
 
+    public class MapStudent
+    {
+        private const int N = 1_000_000;
+        private readonly LinkedList<Student> students;
+        private readonly List<string> firstNames = new List<string>()
+        { 
+            // Simple Male
+            "Juan",
+            "Carlos",
+            "Manuel",
+            "Francisco",
+            "Mauricio",
+            "Eduardo",
+            // Simple Female
+            "Fernanda",
+            "María",
+            "Sofía",
+            "Ana",
+            "Carla",
+            "Marlene",
+            // Composite Male
+            "Juan Manuel",
+            "Luis Carlos",
+            "Manuel Alejandro",
+            "Javier Francisco",
+            "Luis Eduardo",
+            "José Luis",
+            // Composite Female
+            "María Fernanda",
+            "María Jose",
+            "Sofía Paulina",
+            "Ana Belén",
+            "Daniela Alejandra",
+            "Luz Angélica"
+        };
+        private readonly List<string> lastNames = new List<string>()
+        {
+            "García",
+            "Rodríguez",
+            "Hernández",
+            "López",
+            "Martínez",
+            "González",
+            "Pérez",
+            "Sánchez",
+            "Ramírez",
+            "Torres",
+            "Flores",
+            "Rivera",
+            "Gómez",
+            "Díaz",
+            "Cruz",
+            "Morales",
+            "Reyes",
+            "Gutiérrez",
+            "Ortiz"
+        };
 
+        public MapStudent()
+        {
+            var rnd = new Random();
+            students = new LinkedList<Student>();
+
+            for (int i = 1; i <= N; i++)
+            {
+                students.AddLast(new Student()
+                {
+                    average = rnd.Next(50, 101),
+                    ID = i * N,
+                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
+                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                });
+            }
+        }
+
+        [Benchmark]
+        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
+
+        [Benchmark]
+        public Dictionary<long, string> LoopMap()
+        {
+            var result = new Dictionary<long, string>(students.Count);
+            var head = students.First;
+
+            while (head != null)
+            {
+                var student = head.Value;
+                result.Add(student.ID, $"{student.lastName}, {student.firstName}");
+
+                head = head.Next;
+            }
+
+            return result;
+        }
+
+        [Benchmark]
+        public Dictionary<long, string> IteratorMap()
+        {
+            var result = new Dictionary<long, string>(students.Count);
+            foreach (var s in students)
+            {
+                result.Add(s.ID, $"{s.lastName}, {s.firstName}");
+            }
+
+            return result;
+        }
+    }
 }
