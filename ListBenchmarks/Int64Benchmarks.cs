@@ -7,6 +7,7 @@ using System;
 
 namespace ListBenchmarks
 {
+    [MemoryDiagnoser]
     public class ReduceInt64
     {
         private const int N = 1_000_000;
@@ -49,6 +50,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class PopulateInt64
     {
         private const int N = 1_000_000;
@@ -99,6 +101,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class IterateInt64
     {
         private const int N = 1_000_000;
@@ -141,6 +144,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class ContainsInt64
     {
         private const int N = 1_000_000;
@@ -186,6 +190,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class FilterInt64
     {
         private const int N = 1_000_000;
@@ -235,6 +240,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class CopyInt64
     {
         private const int N = 1_000_000;
@@ -277,6 +283,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class MapInt64
     {
         private const int N = 1_000_000;

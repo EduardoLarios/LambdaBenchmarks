@@ -16,6 +16,7 @@ namespace ListBenchmarks
         public string lastName;
     }
 
+    [MemoryDiagnoser]
     public class ReduceStudent
     {
         private const int N = 1_000_000;
@@ -141,6 +142,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class PopulateStudent
     {
         private const int N = 1_000_000;
@@ -258,6 +260,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class IterateStudent
     {
         private const int N = 1_000_000;
@@ -373,6 +376,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class ContainsStudent
     {
         private const int N = 1_000_000;
@@ -481,6 +485,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class FilterStudent
     {
         private const int N = 1_000_000;
@@ -596,6 +601,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class CopyStudent
     {
         private const int N = 1_000_000;
@@ -679,7 +685,7 @@ namespace ListBenchmarks
         public List<Student> LoopCopy()
         {
             var copy = new List<Student>(students.Count);
-            for(int i = 0; i < students.Count; i++)
+            for (int i = 0; i < students.Count; i++)
             {
                 copy.Add(new Student()
                 {
@@ -712,6 +718,7 @@ namespace ListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class MapStudent
     {
         private const int N = 1_000_000;

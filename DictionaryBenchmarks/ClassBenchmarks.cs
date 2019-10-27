@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System;
 
-namespace HashSetBenchmarks
+namespace DictionaryBenchmarks
 {
     public class Student
     {
@@ -20,7 +20,7 @@ namespace HashSetBenchmarks
     public class ReduceStudent
     {
         private const int N = 1_000_000;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -78,17 +78,20 @@ namespace HashSetBenchmarks
         public ReduceStudent()
         {
             var rnd = new Random();
-            students = new HashSet<Student>(N);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
@@ -96,12 +99,13 @@ namespace HashSetBenchmarks
         public string LinqAggregate() =>
             students.Aggregate(
                 new StringBuilder(),
-                (sb, s) => sb.AppendFormat
+                (sb, kvp) => sb.AppendFormat
                 (
-                    "{0}, {1} - {2}",
-                    s.lastName,
-                    s.firstName,
-                    (s.average > 60) ? s.average.ToString() : "Failed"
+                    "{0} : {1},{2} - {3}",
+                    kvp.Key,
+                    kvp.Value.firstName,
+                    kvp.Value.lastName,
+                    (kvp.Value.average > 60) ? kvp.Value.average.ToString() : "Failed"
                 ),
                 sb => sb.ToString());
 
@@ -113,13 +117,14 @@ namespace HashSetBenchmarks
 
             while (iter.MoveNext())
             {
-                var student = iter.Current;
+                var kvp = iter.Current;
                 builder.AppendFormat
                     (
-                        "{0}, {1} - {2}",
-                        student.lastName,
-                        student.firstName,
-                        (student.average > 60) ? student.average.ToString() : "Failed"
+                        "{0} : {1},{2} - {3}",
+                        kvp.Key,
+                        kvp.Value.firstName,
+                        kvp.Value.lastName,
+                        (kvp.Value.average > 60) ? kvp.Value.average.ToString() : "Failed"
                     );
             }
 
@@ -130,14 +135,15 @@ namespace HashSetBenchmarks
         public string IteratorAggregate()
         {
             var builder = new StringBuilder();
-            foreach (var student in students)
+            foreach (var kvp in students)
             {
                 builder.AppendFormat
                     (
-                        "{0}, {1} - {2}",
-                        student.lastName,
-                        student.firstName,
-                        (student.average > 60) ? student.average.ToString() : "Failed"
+                        "{0} : {1},{2} - {3}",
+                        kvp.Key,
+                        kvp.Value.firstName,
+                        kvp.Value.lastName,
+                        (kvp.Value.average > 60) ? kvp.Value.average.ToString() : "Failed"
                     );
             }
 
@@ -210,55 +216,59 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public HashSet<Student> LinqPopulate()
+        public Dictionary<string, Student> LinqPopulate()
         {
             var rnd = new Random();
-            var init = students.Select(s => new Student()
+            return students.Select(s => new Student()
             {
                 average = rnd.Next(50, 101),
                 ID = s * N,
                 firstName = firstNames[rnd.Next(0, firstNames.Count)],
                 lastName = lastNames[rnd.Next(0, lastNames.Count)]
-            });
-
-            return new HashSet<Student>(init);
+            }).ToDictionary(s => $"i - {s.firstName[0]}{s.lastName[0]}{s.ID}", s => s);
         }
 
         [Benchmark]
-        public HashSet<Student> LoopPopulate()
+        public Dictionary<string, Student> LoopPopulate()
         {
             var rnd = new Random();
-            var result = new HashSet<Student>();
+            var result = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                result.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = firstNames[rnd.Next(0, firstNames.Count)],
                     lastName = lastNames[rnd.Next(0, lastNames.Count)]
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                result.Add(key, student);
             }
 
             return result;
         }
 
         [Benchmark]
-        public HashSet<Student> IteratorPopulate()
+        public Dictionary<string, Student> IteratorPopulate()
         {
             var rnd = new Random();
-            var result = new HashSet<Student>();
+            var result = new Dictionary<string, Student>(N);
 
             foreach (var s in students)
             {
-                result.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = s * N,
                     firstName = firstNames[rnd.Next(0, firstNames.Count)],
                     lastName = lastNames[rnd.Next(0, lastNames.Count)]
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                result.Add(key, student);
             }
 
             return result;
@@ -269,7 +279,7 @@ namespace HashSetBenchmarks
     public class IterateStudent
     {
         private const int N = 1_000_000;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -327,37 +337,51 @@ namespace HashSetBenchmarks
         public IterateStudent()
         {
             var rnd = new Random();
-            students = new HashSet<Student>(N);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
         [Benchmark]
-        public int LinqIterate() => students.Count(s => s.firstName.Length > 0 && s.average >= 50 && s.ID < long.MaxValue);
+        public int LinqIterate()
+        {
+            return students.Count(kvp =>
+                kvp.Key.Length > 0 &&
+                kvp.Key.Contains('-') &&
+                kvp.Value.average >= 50 &&
+                kvp.Value.ID < long.MaxValue);
+        }
 
         [Benchmark]
         public int LoopIterate()
         {
+            static bool valid(KeyValuePair<string, Student> kvp)
+            {
+                return kvp.Key.Length > 0 &&
+                        kvp.Key.Contains('-') &&
+                        kvp.Value.average >= 50 &&
+                        kvp.Value.ID < long.MaxValue;
+            }
+
             int count = 0;
             var iter = students.GetEnumerator();
-            static bool valid(int len, int avg, long id) => len > 0 && avg >= 50 && id < long.MaxValue;
 
             while (iter.MoveNext())
             {
-                var s = iter.Current;
-                if (valid(s.firstName.Length, s.average, s.ID))
-                {
-                    count++;
-                }
+                var kvp = iter.Current;
+                if (valid(kvp)) count++;
             }
 
             return count;
@@ -366,15 +390,18 @@ namespace HashSetBenchmarks
         [Benchmark]
         public int IteratorIterate()
         {
-            int count = 0;
-            static bool valid(int len, int avg, long id) => len > 0 && avg >= 50 && id < long.MaxValue;
-
-            foreach (var s in students)
+            static bool valid(KeyValuePair<string, Student> kvp)
             {
-                if (valid(s.firstName.Length, s.average, s.ID))
-                {
-                    count++;
-                }
+                return kvp.Key.Length > 0 &&
+                        kvp.Key.Contains('-') &&
+                        kvp.Value.average >= 50 &&
+                        kvp.Value.ID < long.MaxValue;
+            }
+
+            int count = 0;
+            foreach (var kvp in students)
+            {
+                if (valid(kvp)) count++;
             }
 
             return count;
@@ -385,7 +412,7 @@ namespace HashSetBenchmarks
     public class ContainsStudent
     {
         private const int N = 1_000_000;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -443,52 +470,72 @@ namespace HashSetBenchmarks
         public ContainsStudent()
         {
             var rnd = new Random();
-            students = new HashSet<Student>(N);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
         [Benchmark]
-        public Student LinqContains() => students.First(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
+        public KeyValuePair<string, Student> LinqContains()
+        {
+            return students.First(kvp =>
+                        kvp.Value.average >= 70 &&
+                        kvp.Value.average <= 85 &&
+                        kvp.Value.firstName.Contains(' ') &&
+                        kvp.Value.lastName.Contains("ez"));
+        }
 
         [Benchmark]
-        public Student LoopContains()
+        public KeyValuePair<string, Student> LoopContains()
         {
+            static bool IsTarget(KeyValuePair<string, Student> kvp)
+            {
+                return kvp.Value.average >= 70 &&
+                        kvp.Value.average <= 85 &&
+                        kvp.Value.firstName.Contains(' ') &&
+                        kvp.Value.lastName.Contains("ez");
+            }
+
             var iter = students.GetEnumerator();
 
-            while(iter.MoveNext())
+            while (iter.MoveNext())
             {
-                var s = iter.Current;
-                if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
-                {
-                    return s;
-                }
+                var kvp = iter.Current;
+                if (IsTarget(kvp)) return kvp;
             }
 
-            return null;
+            return default;
         }
 
         [Benchmark]
-        public Student IteratorContains()
+        public KeyValuePair<string, Student> IteratorContains()
         {
-            foreach (var s in students)
+            static bool IsTarget(KeyValuePair<string, Student> kvp)
             {
-                if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
-                {
-                    return s;
-                }
+                return kvp.Value.average >= 70 &&
+                        kvp.Value.average <= 85 &&
+                        kvp.Value.firstName.Contains(' ') &&
+                        kvp.Value.lastName.Contains("ez");
             }
 
-            return null;
+            foreach (var kvp in students)
+            {
+                if (IsTarget(kvp)) return kvp;
+            }
+
+            return default;
         }
     }
 
@@ -496,9 +543,8 @@ namespace HashSetBenchmarks
     public class FilterStudent
     {
         private const int N = 1_000_000;
-        private readonly int target;
         private readonly Consumer consumer;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -557,38 +603,50 @@ namespace HashSetBenchmarks
         {
             var rnd = new Random();
 
-            students = new HashSet<Student>(N);
             consumer = new Consumer();
-            target = rnd.Next(1, N / 2);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
         [Benchmark]
-        public void LinqFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
+        public void LinqFilter()
+        {
+            students.Where(kvp =>
+                    kvp.Value.average >= 70 &&
+                    (kvp.Value.firstName.Contains(' ') || kvp.Value.lastName.Contains(' ')) &&
+                    kvp.Value.ID >= 3 * N).Consume(consumer);
+        }
 
         [Benchmark]
         public void LoopFilter()
         {
-            var result = new List<Student>();
+            static bool IsContained(KeyValuePair<string, Student> kvp)
+            {
+                return kvp.Value.average >= 70 &&
+                        (kvp.Value.firstName.Contains(' ') || kvp.Value.lastName.Contains(' ')) &&
+                        kvp.Value.ID >= 3 * N;
+            }
+
+            var result = new List<KeyValuePair<string, Student>>();
             var iter = students.GetEnumerator();
 
-            while(iter.MoveNext())
+            while (iter.MoveNext())
             {
-                var s = iter.Current;
-                if (s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target)
-                {
-                    result.Add(s);
-                }
+                var kvp = iter.Current;
+                if (IsContained(kvp)) result.Add(kvp);
             }
 
             result.Consume(consumer);
@@ -597,13 +655,17 @@ namespace HashSetBenchmarks
         [Benchmark]
         public void IteratorFilter()
         {
-            var result = new List<Student>();
-            foreach (var s in students)
+            static bool IsContained(KeyValuePair<string, Student> kvp)
             {
-                if (s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target)
-                {
-                    result.Add(s);
-                }
+                return kvp.Value.average >= 70 &&
+                        (kvp.Value.firstName.Contains(' ') || kvp.Value.lastName.Contains(' ')) &&
+                        kvp.Value.ID >= 3 * N;
+            }
+
+            var result = new List<KeyValuePair<string, Student>>();
+            foreach (var kvp in students)
+            {
+                if (IsContained(kvp)) result.Add(kvp);
             }
 
             result.Consume(consumer);
@@ -614,7 +676,7 @@ namespace HashSetBenchmarks
     public class CopyStudent
     {
         private const int N = 1_000_000;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -672,58 +734,72 @@ namespace HashSetBenchmarks
         public CopyStudent()
         {
             var rnd = new Random();
-
-            students = new HashSet<Student>(N);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
         [Benchmark]
-        public HashSet<Student> LinqCopy() => new HashSet<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
+        public Dictionary<string, Student> LinqCopy() =>
+            students.Select(kvp =>
+                new Student()
+                {
+                    average = kvp.Value.average,
+                    ID = kvp.Value.ID,
+                    firstName = kvp.Value.firstName,
+                    lastName = kvp.Value.lastName
+                }).ToDictionary(k => $"i - {k.firstName[0]}{k.lastName[0]}{k.ID}", v => v);
 
         [Benchmark]
-        public HashSet<Student> LoopCopy()
+        public Dictionary<string, Student> LoopCopy()
         {
-            var copy = new HashSet<Student>(students.Count);
+            var copy = new Dictionary<string, Student>(students.Count);
             var iter = students.GetEnumerator();
 
-            while(iter.MoveNext())
+            while (iter.MoveNext())
             {
-                var student = iter.Current;
-                copy.Add(new Student()
+                var kvp = iter.Current;
+                var student = new Student()
                 {
-                    average = student.average,
-                    ID = student.ID,
-                    firstName = student.firstName,
-                    lastName = student.lastName
-                });
+                    average = kvp.Value.average,
+                    ID = kvp.Value.ID,
+                    firstName = kvp.Value.firstName,
+                    lastName = kvp.Value.lastName
+                };
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                copy.Add(key, student);
             }
 
             return copy;
         }
 
         [Benchmark]
-        public HashSet<Student> IteratorCopy()
+        public Dictionary<string, Student> IteratorCopy()
         {
-            var copy = new HashSet<Student>(students.Count);
-            foreach (var student in students)
+            var copy = new Dictionary<string, Student>(students.Count);
+            foreach (var kvp in students)
             {
-                copy.Add(new Student()
+                var student = new Student()
                 {
-                    average = student.average,
-                    ID = student.ID,
-                    firstName = student.firstName,
-                    lastName = student.lastName
-                });
+                    average = kvp.Value.average,
+                    ID = kvp.Value.ID,
+                    firstName = kvp.Value.firstName,
+                    lastName = kvp.Value.lastName
+                };
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                copy.Add(key, student);
             }
 
             return copy;
@@ -734,7 +810,7 @@ namespace HashSetBenchmarks
     public class MapStudent
     {
         private const int N = 1_000_000;
-        private readonly HashSet<Student> students;
+        private readonly Dictionary<string, Student> students;
         private readonly List<string> firstNames = new List<string>()
         { 
             // Simple Male
@@ -792,45 +868,53 @@ namespace HashSetBenchmarks
         public MapStudent()
         {
             var rnd = new Random();
-            students = new HashSet<Student>(N);
+            students = new Dictionary<string, Student>(N);
 
             for (int i = 1; i <= N; i++)
             {
-                students.Add(new Student()
+                var student = new Student()
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
                     firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
                     lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
-                });
+                };
+
+                var key = $"i - {student.firstName[0]}{student.lastName[0]}{student.ID}";
+                students.Add(key, student);
             }
         }
 
         [Benchmark]
-        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
+        public List<KeyValuePair<int, string>> LinqMap() =>
+                students.Select((kvp, index) =>
+                    new KeyValuePair<int, string>(index, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}")).ToList();
 
         [Benchmark]
-        public Dictionary<long, string> LoopMap()
+        public List<KeyValuePair<int, string>> LoopMap()
         {
-            var result = new Dictionary<long, string>(students.Count);
+            var result = new List<KeyValuePair<int, string>>(students.Count);
             var iter = students.GetEnumerator();
 
-            while(iter.MoveNext())
+            for (int i = 0; iter.MoveNext(); i++)
             {
-                var student = iter.Current;
-                result.Add(student.ID, $"{student.lastName}, {student.firstName}");
+                var kvp = iter.Current;
+                result.Add(new KeyValuePair<int, string>(i, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}"));
             }
 
             return result;
         }
 
         [Benchmark]
-        public Dictionary<long, string> IteratorMap()
+        public List<KeyValuePair<int, string>> IteratorMap()
         {
-            var result = new Dictionary<long, string>(students.Count);
-            foreach (var s in students)
+            var result = new List<KeyValuePair<int, string>>(students.Count);
+            int i = 0;
+
+            foreach (var kvp in students)
             {
-                result.Add(s.ID, $"{s.lastName}, {s.firstName}");
+                result.Add(new KeyValuePair<int, string>(i, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}"));
+                i++;
             }
 
             return result;

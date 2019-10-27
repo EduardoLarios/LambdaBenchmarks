@@ -7,6 +7,7 @@ using System;
 
 namespace LinkedListBenchmarks
 {
+    [MemoryDiagnoser]
     public class ReduceInt32
     {
         private const int N = 1_000_000;
@@ -48,6 +49,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class PopulateInt32
     {
         private const int N = 1_000_000;
@@ -95,6 +97,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class IterateInt32
     {
         private const int N = 1_000_000;
@@ -136,6 +139,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class ContainsInt32
     {
         private const int N = 1_000_000;
@@ -184,6 +188,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class FilterInt32
     {
         private const int N = 1_000_000;
@@ -235,6 +240,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class CopyInt32
     {
         private const int N = 1_000_000;
@@ -276,6 +282,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class MapInt32
     {
         private const int N = 1_000_000;

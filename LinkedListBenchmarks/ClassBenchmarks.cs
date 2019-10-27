@@ -16,6 +16,7 @@ namespace LinkedListBenchmarks
         public string lastName;
     }
 
+    [MemoryDiagnoser]
     public class ReduceStudent
     {
         private const int N = 1_000_000;
@@ -146,6 +147,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class PopulateStudent
     {
         private const int N = 1_000_000;
@@ -265,6 +267,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class IterateStudent
     {
         private const int N = 1_000_000;
@@ -383,6 +386,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class ContainsStudent
     {
         private const int N = 1_000_000;
@@ -491,6 +495,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class FilterStudent
     {
         private const int N = 1_000_000;
@@ -610,6 +615,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class CopyStudent
     {
         private const int N = 1_000_000;
@@ -731,6 +737,7 @@ namespace LinkedListBenchmarks
         }
     }
 
+    [MemoryDiagnoser]
     public class MapStudent
     {
         private const int N = 1_000_000;
