@@ -14,14 +14,8 @@ namespace ListBenchmarks
         public long ID;
         public string firstName;
         public string lastName;
-    }
 
-    [MemoryDiagnoser]
-    public class ReduceStudent
-    {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
+        public static List<string> firstNames = new List<string>
         { 
             // Simple Male
             "Juan",
@@ -52,7 +46,7 @@ namespace ListBenchmarks
             "Daniela Alejandra",
             "Luz Angélica"
         };
-        private readonly List<string> lastNames = new List<string>()
+        public static List<string> lastNames = new List<string>
         {
             "García",
             "Rodríguez",
@@ -74,8 +68,17 @@ namespace ListBenchmarks
             "Gutiérrez",
             "Ortiz"
         };
+    }
 
-        public ReduceStudent()
+    [MemoryDiagnoser]
+    public class ReduceStudent
+    {
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<Student> students;
+
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             var rnd = new Random();
             students = new List<Student>(N);
@@ -86,8 +89,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
@@ -145,63 +148,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateStudent
     {
-        private const int N = 1_000_000;
-        private readonly IEnumerable<int> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private IEnumerable<int> students;
 
-        public PopulateStudent()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             students = Enumerable.Range(1, N);
         }
@@ -214,8 +166,8 @@ namespace ListBenchmarks
             {
                 average = rnd.Next(50, 101),
                 ID = n * N,
-                firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
             }).ToList();
         }
 
@@ -231,8 +183,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
 
@@ -251,8 +203,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = n * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
 
@@ -263,63 +215,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateStudent
     {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<Student> students;
 
-        public IterateStudent()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             var rnd = new Random();
             students = new List<Student>(N);
@@ -330,8 +231,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
@@ -379,63 +280,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsStudent
     {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<Student> students;
 
-        public ContainsStudent()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
             students = new List<Student>(N);
@@ -446,8 +296,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
@@ -488,65 +338,14 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterStudent
     {
-        private const int N = 1_000_000;
-        private readonly int target;
-        private readonly Consumer consumer;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private int target;
+        private Consumer consumer;
+        private List<Student> students;
 
-        public FilterStudent()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -560,8 +359,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
@@ -604,63 +403,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyStudent
     {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<Student> students;
 
-        public CopyStudent()
+        [GlobalSetup]
+        public void CopySetup()
         {
             var rnd = new Random();
 
@@ -672,8 +420,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
@@ -721,63 +469,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapStudent
     {
-        private const int N = 1_000_000;
-        private readonly List<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<Student> students;
 
-        public MapStudent()
+        [GlobalSetup]
+        public void MapSetup()
         {
             var rnd = new Random();
             students = new List<Student>(N);
@@ -788,8 +485,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
-                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }

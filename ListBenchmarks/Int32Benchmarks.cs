@@ -10,7 +10,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        [Params(10, 100, 1000)]
+        [Params(100, 1000, 10_000)]
         public int N;
         private List<int> data;
 
@@ -55,11 +55,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly List<int> data;
+        private List<int> data;
 
-        public PopulateInt32()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             // Initialize pool of data to fill
             data = new List<int>(Enumerable.Range(1, N));
@@ -104,13 +105,13 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly List<int> data;
+        private List<int> data;
 
-        public IterateInt32()
+        [GlobalSetup]
+        public void IterateSetup()
         {
-
             data = new List<int>(Enumerable.Repeat(1, N));
         }
 
@@ -145,12 +146,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly int target;
-        private readonly List<int> data;
+        private int target;
+        private List<int> data;
 
-        public ContainsInt32()
+        public void ContainsSetup()
         {
             var rnd = new Random();
 
@@ -192,12 +193,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly List<int> data;
-        private readonly Consumer consumer;
+        private List<int> data;
+        private Consumer consumer;
 
-        public FilterInt32()
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -243,11 +244,11 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly List<int> data;
+        private List<int> data;
 
-        public CopyInt32()
+        public void CopySetup()
         {
             data = new List<int>(Enumerable.Range(1, N));
         }
@@ -283,12 +284,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        [Params(10, 100, 1000, 10_000)]
+        [Params(100, 1000, 10_000)]
         public int N;
-        private readonly List<int> data;
-        private readonly Consumer consumer;
+        private List<int> data;
+        private Consumer consumer;
 
-        public MapInt32()
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new List<int>(Enumerable.Range(1, N));

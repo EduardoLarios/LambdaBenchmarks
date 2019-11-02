@@ -10,10 +10,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<long> data;
 
-        public ReduceInt64()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new List<long>(N);
             for (int i = 1; i <= N; i++)
@@ -23,7 +25,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public long LinqAggregate() => data.Aggregate((total, num) => total + num);
+        public long LinqAggresgate() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
         public long LoopAggregate()
@@ -53,10 +55,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<int> data;
 
-        public PopulateInt64()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             data = new List<int>(N);
             for (int i = 1; i <= N; i++)
@@ -104,10 +108,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<long> data;
 
-        public IterateInt64()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new List<long>(N);
             for (int i = 1; i <= N; i++)
@@ -147,11 +153,13 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt64
     {
-        private const int N = 1_000_000;
-        private readonly long target;
-        private readonly List<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private long target;
+        private List<long> data;
 
-        public ContainsInt64()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
 
@@ -193,11 +201,13 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<long> data;
+        private Consumer consumer;
 
-        public FilterInt64()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -243,10 +253,12 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<long> data;
 
-        public CopyInt64()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new List<long>(N);
             for (int i = 1; i <= N; i++)
@@ -286,11 +298,13 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N = 1_000_000;
+        private List<long> data;
+        private Consumer consumer;
 
-        public MapInt64()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new List<long>(N);
