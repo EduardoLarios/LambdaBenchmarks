@@ -10,12 +10,18 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(10, 100, 1000)]
+        public int N;
+        private List<int> data;
 
-        public ReduceInt32()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
-            data = new List<int>(Enumerable.Range(1, N));
+            data = new List<int>(N);
+            for (int i = 1; i <= N; i++)
+            {
+                data.Add(i);
+            }
         }
 
         [Benchmark]
@@ -49,7 +55,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly List<int> data;
 
         public PopulateInt32()
@@ -97,7 +104,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly List<int> data;
 
         public IterateInt32()
@@ -137,7 +145,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly int target;
         private readonly List<int> data;
 
@@ -183,7 +192,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly List<int> data;
         private readonly Consumer consumer;
 
@@ -233,7 +243,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly List<int> data;
 
         public CopyInt32()
@@ -272,7 +283,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        private const int N = 1_000_000;
+        [Params(10, 100, 1000, 10_000)]
+        public int N;
         private readonly List<int> data;
         private readonly Consumer consumer;
 

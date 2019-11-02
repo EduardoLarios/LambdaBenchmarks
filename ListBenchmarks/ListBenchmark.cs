@@ -19,7 +19,7 @@ namespace ListBenchmarks
             //BenchmarkRunner.Run<MapInt32>();
             //BenchmarkRunner.Run<FilterInt32>();
             //BenchmarkRunner.Run<ReduceInt32>();
-            BenchmarkRunner.Run<MapStudent>();
+            BenchmarkRunner.Run<ReduceInt32>();
         }
     }
 }
