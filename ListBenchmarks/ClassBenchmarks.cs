@@ -86,8 +86,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
@@ -330,8 +330,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
@@ -446,8 +446,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
@@ -560,8 +560,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
@@ -672,8 +672,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
@@ -788,8 +788,8 @@ namespace ListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = firstNames[rnd.Next(0, firstNames.Count)],
+                    lastName = lastNames[rnd.Next(0, lastNames.Count)]
                 });
             }
         }
