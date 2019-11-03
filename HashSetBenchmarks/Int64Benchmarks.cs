@@ -10,10 +10,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt64
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<long> data;
 
-        public ReduceInt64()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new HashSet<long>(N);
             for (int i = 1; i <= N; i++)
@@ -55,10 +57,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<int> data;
 
-        public PopulateInt64()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             data = new List<int>(N);
             for (int i = 1; i <= N; i++)
@@ -102,10 +106,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class IterateInt64
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<long> data;
 
-        public IterateInt64()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new HashSet<long>(N);
             for (int i = 1; i <= N; i++)
@@ -148,11 +154,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt64
     {
-        private const int N = 1_000_000;
-        private readonly long target;
-        private readonly HashSet<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private long target;
+        private HashSet<long> data;
 
-        public ContainsInt64()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
             var temp = rnd.Next(-N, N);
@@ -199,11 +207,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class FilterInt64
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<long> data;
+        private Consumer consumer;
 
-        public FilterInt64()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -251,10 +261,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class CopyInt64
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<long> data;
 
-        public CopyInt64()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new HashSet<long>(N);
             for (int i = 1; i <= N; i++)
@@ -296,11 +308,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class MapInt64
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<long> data;
+        private Consumer consumer;
 
-        public MapInt64()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new HashSet<long>(N);

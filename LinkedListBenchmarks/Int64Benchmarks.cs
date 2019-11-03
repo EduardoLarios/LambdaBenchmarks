@@ -10,10 +10,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt64
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<long> data;
 
-        public ReduceInt64()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new LinkedList<long>();
             for (int i = 1; i <= N; i++)
@@ -56,10 +58,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt64
     {
-        private const int N = 1_000_000;
-        private readonly List<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<long> data;
 
-        public PopulateInt64()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             data = new List<long>(N);
             for (int i = 1; i <= N; i++)
@@ -107,10 +111,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt64
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<long> data;
 
-        public IterateInt64()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new LinkedList<long>();
             for (int i = 1; i <= N; i++)
@@ -153,11 +159,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt64
     {
-        private const int N = 1_000_000;
-        private readonly long target;
-        private readonly LinkedList<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private long target;
+        private LinkedList<long> data;
 
-        public ContainsInt64()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
 
@@ -202,11 +210,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt64
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<long> data;
+        private Consumer consumer;
 
-        public FilterInt64()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -254,10 +264,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt64
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<long> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<long> data;
 
-        public CopyInt64()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new LinkedList<long>();
             for (int i = 1; i <= N; i++)
@@ -300,11 +312,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class MapInt64
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<long> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<long> data;
+        private Consumer consumer;
 
-        public MapInt64()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new LinkedList<long>();

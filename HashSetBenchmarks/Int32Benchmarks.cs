@@ -10,10 +10,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<int> data;
 
-        public ReduceInt32()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new HashSet<int>(Enumerable.Range(1, N));
         }
@@ -51,10 +53,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<int> data;
 
-        public PopulateInt32()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             data = new List<int>(Enumerable.Range(1, N));
         }
@@ -95,10 +99,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<int> data;
 
-        public IterateInt32()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new HashSet<int>(Enumerable.Range(1, N));
         }
@@ -137,11 +143,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        private const int N = 1_000_000;
-        private readonly int target;
-        private readonly HashSet<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private int target;
+        private HashSet<int> data;
 
-        public ContainsInt32()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
             var temp = rnd.Next(-N, N);
@@ -188,11 +196,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<int> data;
+        private Consumer consumer;
 
-        public FilterInt32()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -240,10 +250,12 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<int> data;
 
-        public CopyInt32()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new HashSet<int>(Enumerable.Range(1, N));
         }
@@ -281,11 +293,13 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        private const int N = 1_000_000;
-        private readonly HashSet<int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private HashSet<int> data;
+        private Consumer consumer;
 
-        public MapInt32()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new HashSet<int>(Enumerable.Range(1, N));

@@ -1,0 +1,10 @@
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.exe
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.deps.json
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.runtimeconfig.json
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.runtimeconfig.dev.json
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.dll
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\bin\Release\netcoreapp3.0\AdapterPatternBenchmark.pdb
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\obj\Release\netcoreapp3.0\AdapterPatternBenchmark.AssemblyInfoInputs.cache
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\obj\Release\netcoreapp3.0\AdapterPatternBenchmark.AssemblyInfo.cs
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\obj\Release\netcoreapp3.0\AdapterPatternBenchmark.dll
+C:\Users\Eduardo Larios\Documents\Code\C#\LambdaBenchmarks\AdapterPatternBenchmark\obj\Release\netcoreapp3.0\AdapterPatternBenchmark.pdb

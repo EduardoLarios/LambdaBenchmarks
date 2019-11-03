@@ -10,10 +10,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<int> data;
-
-        public ReduceInt32()
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<int> data;
+        
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new LinkedList<int>(Enumerable.Range(1, N));
         }
@@ -52,10 +54,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<int> data;
 
-        public PopulateInt32()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             // Initialize range to iterate
             data = new List<int>(Enumerable.Range(1, N));
@@ -100,10 +104,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<int> data;
 
-        public IterateInt32()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new LinkedList<int>(Enumerable.Repeat(1, N));
         }
@@ -142,11 +148,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        private const int N = 1_000_000;
-        private readonly int target;
-        private readonly LinkedList<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private int target;
+        private LinkedList<int> data;
 
-        public ContainsInt32()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
 
@@ -191,11 +199,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<int> data;
+        private Consumer consumer;
 
-        public FilterInt32()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             var rnd = new Random();
 
@@ -243,10 +253,12 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<int> data;
 
-        public CopyInt32()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new LinkedList<int>(Enumerable.Range(1, N));
         }
@@ -285,11 +297,13 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        private const int N = 1_000_000;
-        private readonly LinkedList<int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private LinkedList<int> data;
+        private Consumer consumer;
 
-        public MapInt32()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new LinkedList<int>(Enumerable.Range(1, N));

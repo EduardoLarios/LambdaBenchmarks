@@ -10,10 +10,12 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        private const int N = 1_000_000;
-        private readonly Dictionary<int, int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private Dictionary<int, int> data;
 
-        public ReduceInt32()
+        [GlobalSetup]
+        public void ReduceSetup()
         {
             data = new Dictionary<int, int>(N);
             for (int i = 0; i < N; i++)
@@ -59,10 +61,12 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        private const int N = 1_000_000;
-        private readonly List<int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private List<int> data;
 
-        public PopulateInt32()
+        [GlobalSetup]
+        public void PopulateSetup()
         {
             data = new List<int>(Enumerable.Range(1, N));
         }
@@ -100,10 +104,12 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        private const int N = 1_000_000;
-        private readonly Dictionary<int, int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private Dictionary<int, int> data;
 
-        public IterateInt32()
+        [GlobalSetup]
+        public void IterateSetup()
         {
             data = new Dictionary<int, int>(N);
             for (int i = 0; i < N; i++)
@@ -146,11 +152,13 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        private const int N = 1_000_000;
-        private readonly int target;
-        private readonly Dictionary<int, int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private int target;
+        private Dictionary<int, int> data;
 
-        public ContainsInt32()
+        [GlobalSetup]
+        public void ContainsSetup()
         {
             var rnd = new Random();
 
@@ -195,11 +203,13 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        private const int N = 1_000_000;
-        private readonly Dictionary<int, int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private Dictionary<int, int> data;
+        private Consumer consumer;
 
-        public FilterInt32()
+        [GlobalSetup]
+        public void FilterSetup()
         {
             consumer = new Consumer();
             data = new Dictionary<int, int>(N);
@@ -247,10 +257,12 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        private const int N = 1_000_000;
-        private readonly Dictionary<int, int> data;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private Dictionary<int, int> data;
 
-        public CopyInt32()
+        [GlobalSetup]
+        public void CopySetup()
         {
             data = new Dictionary<int, int>(N);
 
@@ -293,11 +305,13 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        private const int N = 1_000_000;
-        private readonly Dictionary<int, int> data;
-        private readonly Consumer consumer;
+        [Params(100, 1000, 10_000)]
+        public int N;
+        private Dictionary<int, int> data;
+        private Consumer consumer;
 
-        public MapInt32()
+        [GlobalSetup]
+        public void MapSetup()
         {
             consumer = new Consumer();
             data = new Dictionary<int, int>(N);
