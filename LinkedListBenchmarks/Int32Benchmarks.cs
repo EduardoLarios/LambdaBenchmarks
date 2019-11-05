@@ -13,7 +13,7 @@ namespace LinkedListBenchmarks
         [Params(100, 1000, 10_000)]
         public int N;
         private LinkedList<int> data;
-        
+
         [GlobalSetup]
         public void ReduceSetup()
         {

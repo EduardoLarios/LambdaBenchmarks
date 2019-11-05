@@ -8,4 +8,10 @@ ListBenchmarks/bin
 ListBenchmarks/obj
 StrategyPatternBenchmark/bin
 StrategyPatternBenchmark/obj
+AdapterPatternBenchmark/bin
+AdapterPatternBenchmark/obj
+FacadePatternBenchmark/bin
+FacadePatternBenchmark/obj
+ObserverPatternBenchmark/bin
+ObserverPatternBenchmark/obj
 .vs

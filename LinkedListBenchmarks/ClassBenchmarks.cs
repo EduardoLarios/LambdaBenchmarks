@@ -16,7 +16,7 @@ namespace LinkedListBenchmarks
         public string lastName;
 
         public static List<string> firstNames = new List<string>()
-        { 
+        {
             // Simple Male
             "Juan",
             "Carlos",
@@ -76,7 +76,7 @@ namespace LinkedListBenchmarks
         [Params(100, 1000, 10_000)]
         public int N;
         private LinkedList<Student> students;
-        
+
         [GlobalSetup]
         public void ReduceSetup()
         {
@@ -344,7 +344,7 @@ namespace LinkedListBenchmarks
         [Params(100, 1000, 10_000)]
         public int N;
         private List<Student> students;
-        
+
         [GlobalSetup]
         public void ContainsSetup()
         {

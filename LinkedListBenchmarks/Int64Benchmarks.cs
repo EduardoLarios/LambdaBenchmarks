@@ -172,7 +172,7 @@ namespace LinkedListBenchmarks
             data = new LinkedList<long>();
             target = rnd.Next(1, 101) * N;
 
-            while (data.Count < N)
+            for (int i = 1; i <= N; i++)
             {
                 data.AddLast(rnd.Next(1, 101) * N);
             }

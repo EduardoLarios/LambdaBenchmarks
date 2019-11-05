@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj": {}
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj": {
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj",
+        "projectUniqueName": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj",
         "projectName": "ObserverPatternBenchmark",
-        "projectPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj",
+        "projectPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\ObserverPatternBenchmark.csproj",
         "packagesPath": "C:\\Users\\Eduardo Larios\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\obj\\",
+        "outputPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\ObserverPatternBenchmark\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj": {}
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj": {
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj",
+        "projectUniqueName": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj",
         "projectName": "FacadePatternBenchmark",
-        "projectPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj",
+        "projectPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\FacadePatternBenchmark.csproj",
         "packagesPath": "C:\\Users\\Eduardo Larios\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\obj\\",
+        "outputPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\FacadePatternBenchmark\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj": {}
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj": {
+    "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj",
+        "projectUniqueName": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj",
         "projectName": "AdapterPatternBenchmark",
-        "projectPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj",
+        "projectPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\AdapterPatternBenchmark.csproj",
         "packagesPath": "C:\\Users\\Eduardo Larios\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Eduardo Larios\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\obj\\",
+        "outputPath": "F:\\Eduardo\\Documents\\Code\\C#\\LambdaBenchmarks\\AdapterPatternBenchmark\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
