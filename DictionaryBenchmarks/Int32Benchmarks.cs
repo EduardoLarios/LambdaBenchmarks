@@ -32,7 +32,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public int WhileLoopAggregate()
+        public int LoopAggregate()
         {
             var iter = data.GetEnumerator();
             int total = 0;
@@ -46,7 +46,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public int ForEachAggregate()
+        public int IteratorAggregate()
         {
             int total = 0;
             foreach (var pair in data)

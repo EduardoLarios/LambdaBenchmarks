@@ -610,8 +610,7 @@ namespace DictionaryBenchmarks
 
             foreach (var kvp in students)
             {
-                result.Add(new KeyValuePair<int, string>(i, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}"));
-                i++;
+                result.Add(new KeyValuePair<int, string>(i++, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}"));
             }
 
             return result;
