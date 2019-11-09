@@ -25,7 +25,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public long LinqAggresgate() => data.Aggregate((total, num) => total + num);
+        public long LambdaAggresgate() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
         public long LoopAggregate()
@@ -70,7 +70,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<long> LinqPopulate()
+        public List<long> LambdaPopulate()
         {
             var rnd = new Random();
             return data.Select(_ => (long)rnd.Next(1, 101) * N).ToList();
@@ -123,7 +123,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public long LinqIterate() => data.LongCount(n => n > 0);
+        public long LambdaIterate() => data.LongCount(n => n > 0);
 
         [Benchmark]
         public long LoopIterate()
@@ -166,35 +166,35 @@ namespace ListBenchmarks
             data = new List<long>(N);
             target = rnd.Next(1, 101) * N;
 
-            while (data.Count < N)
+            for (int i = 1; i <= N; i++)
             {
                 data.Add(rnd.Next(1, 101) * N);
             }
         }
 
         [Benchmark]
-        public long LinqContains() => data.Find(n => n == target);
+        public bool LambdaContains() => data.Any(n => n == target);
 
         [Benchmark]
-        public long LoopContains()
+        public bool LoopContains()
         {
             for (int i = 0; i < data.Count; i++)
             {
-                if (data[i] == target) return data[i];
+                if (data[i] == target) return true;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public long IteratorContains()
+        public bool IteratorContains()
         {
             foreach (long value in data)
             {
-                if (value == target) return value;
+                if (value == target) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -221,7 +221,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
+        public void LambdaFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -268,7 +268,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<long> LinqCopy() => data.Select(n => n).ToList();
+        public List<long> LambdaCopy() => data.Select(n => n).ToList();
 
         [Benchmark]
         public List<long> LoopCopy()
@@ -316,7 +316,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public void LinqMap() => data.Select(n => n * 5).Consume(consumer);
+        public void LambdaMap() => data.Select(n => n * 5).Consume(consumer);
 
         [Benchmark]
         public void LoopMap()

@@ -96,7 +96,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public string LinqAggregate() =>
+        public string LambdaReduce() =>
             students.Aggregate(
                 new StringBuilder(),
                 (sb, n) => sb.AppendFormat
@@ -109,7 +109,7 @@ namespace ListBenchmarks
                 sb => sb.ToString());
 
         [Benchmark]
-        public string LoopAggregate()
+        public string LoopReduce()
         {
             var builder = new StringBuilder(students.Count);
             for (int i = 0; i < students.Count; i++)
@@ -127,7 +127,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public string IteratorAggregate()
+        public string IteratorReduce()
         {
             var builder = new StringBuilder();
             foreach (var student in students)
@@ -159,7 +159,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqPopulate()
+        public List<Student> LambdaPopulate()
         {
             var rnd = new Random();
             return students.Select(n => new Student()
@@ -238,7 +238,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int LinqIterate() => students.Count(n => n.firstName.Length > 0 && n.average >= 50 && n.ID < long.MaxValue);
+        public int LambdaIterate() => students.Count(n => n.firstName.Length > 0 && n.average >= 50 && n.ID < long.MaxValue);
 
         [Benchmark]
         public int LoopIterate()
@@ -303,35 +303,41 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public Student LinqContains() => students.Find(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
+        public bool LambdaContains() => students.Any(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
 
         [Benchmark]
-        public Student LoopContains()
+        public bool LoopContains()
         {
             for (int i = 0; i < students.Count; i++)
             {
                 var s = students[i];
-                if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
+                if (s.average >= 70
+                    && s.average <= 85
+                    && s.firstName.Contains(' ')
+                    && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
 
         [Benchmark]
-        public Student IteratorContains()
+        public bool IteratorContains()
         {
             foreach (var s in students)
             {
-                if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
+                if (s.average >= 70
+                    && s.average <= 85
+                    && s.firstName.Contains(' ')
+                    && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
     }
 
@@ -366,7 +372,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
+        public void LambdaFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -427,7 +433,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<Student> LinqCopy() => students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }).ToList();
+        public List<Student> LambdaCopy() => students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }).ToList();
 
         [Benchmark]
         public List<Student> LoopCopy()
@@ -492,7 +498,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
+        public Dictionary<long, string> LambdaMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
 
         [Benchmark]
         public Dictionary<long, string> LoopMap()

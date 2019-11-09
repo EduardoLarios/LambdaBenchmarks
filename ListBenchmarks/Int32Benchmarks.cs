@@ -25,10 +25,10 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int LinqAggregate() => data.Aggregate((total, num) => total + num);
+        public int LambdaReduce() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
-        public int LoopAggregate()
+        public int LoopReduce()
         {
             int total = 0;
             for (int i = 0; i < data.Count; i++)
@@ -40,7 +40,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int IteratorAggregate()
+        public int IteratorReduce()
         {
             int total = 0;
             foreach (int value in data)
@@ -67,7 +67,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public List<int> LinqPopulate()
+        public List<int> LambdaPopulate()
         {
             var rnd = new Random();
             return data.Select(_ => rnd.Next(1, 101)).ToList();
@@ -116,7 +116,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int LinqIterate() => data.Count(n => n > 0);
+        public int LambdaIterate() => data.Count(n => n > 0);
 
         [Benchmark]
         public int LoopIterate()
@@ -151,6 +151,7 @@ namespace ListBenchmarks
         private int target;
         private List<int> data;
 
+        [GlobalSetup]
         public void ContainsSetup()
         {
             var rnd = new Random();
@@ -165,28 +166,28 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public int LinqContains() => data.Find(n => n == target);
+        public bool LambdaContains() => data.Any(n => n == target);
 
         [Benchmark]
-        public int LoopContains()
+        public bool LoopContains()
         {
             for (int i = 0; i < data.Count; i++)
             {
-                if (data[i] == target) return data[i];
+                if (data[i] == target) return true;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public int IteratorContains()
+        public bool IteratorContains()
         {
             foreach (int value in data)
             {
-                if (value == target) return value;
+                if (value == target) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -198,6 +199,7 @@ namespace ListBenchmarks
         private List<int> data;
         private Consumer consumer;
 
+        [GlobalSetup]
         public void FilterSetup()
         {
             var rnd = new Random();
@@ -212,7 +214,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
+        public void LambdaFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -248,13 +250,14 @@ namespace ListBenchmarks
         public int N;
         private List<int> data;
 
+        [GlobalSetup]
         public void CopySetup()
         {
             data = new List<int>(Enumerable.Range(1, N));
         }
 
         [Benchmark]
-        public List<int> LinqCopy() => data.Select(n => n).ToList();
+        public List<int> LambdaCopy() => data.Select(n => n).ToList();
 
         [Benchmark]
         public List<int> LoopCopy()
@@ -289,6 +292,7 @@ namespace ListBenchmarks
         private List<int> data;
         private Consumer consumer;
 
+        [GlobalSetup]
         public void MapSetup()
         {
             consumer = new Consumer();
@@ -296,7 +300,7 @@ namespace ListBenchmarks
         }
 
         [Benchmark]
-        public void LinqMap() => data.Select(n => n * n).Consume(consumer);
+        public void LambdaMap() => data.Select(n => n * n).Consume(consumer);
 
         [Benchmark]
         public void LoopMap()

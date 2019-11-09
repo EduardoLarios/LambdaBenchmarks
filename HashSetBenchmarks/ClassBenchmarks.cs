@@ -96,7 +96,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public string LinqAggregate() =>
+        public string LambdaReduce() =>
             students.Aggregate(
                 new StringBuilder(),
                 (sb, s) => sb.AppendFormat
@@ -109,7 +109,7 @@ namespace HashSetBenchmarks
                 sb => sb.ToString());
 
         [Benchmark]
-        public string LoopAggregate()
+        public string LoopReduce()
         {
             var builder = new StringBuilder(students.Count);
             var iter = students.GetEnumerator();
@@ -130,7 +130,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public string IteratorAggregate()
+        public string IteratorReduce()
         {
             var builder = new StringBuilder();
             foreach (var student in students)
@@ -154,7 +154,7 @@ namespace HashSetBenchmarks
         [Params(100, 1000, 10_000)]
         public int N;
         private IEnumerable<int> students;
-        
+
         [GlobalSetup]
         public void PopulateSetup()
         {
@@ -162,7 +162,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public HashSet<Student> LinqPopulate()
+        public HashSet<Student> LambdaPopulate()
         {
             var rnd = new Random();
             var init = students.Select(s => new Student()
@@ -223,7 +223,7 @@ namespace HashSetBenchmarks
         [Params(100, 1000, 10_000)]
         public int N;
         private HashSet<Student> students;
-        
+
         [GlobalSetup]
         public void IterateSetup()
         {
@@ -243,7 +243,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public int LinqIterate() => students.Count(s => s.firstName.Length > 0 && s.average >= 50 && s.ID < long.MaxValue);
+        public int LambdaIterate() => students.Count(s => s.firstName.Length > 0 && s.average >= 50 && s.ID < long.MaxValue);
 
         [Benchmark]
         public int LoopIterate()
@@ -308,10 +308,10 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public Student LinqContains() => students.First(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
+        public bool LambdaContains() => students.Any(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
 
         [Benchmark]
-        public Student LoopContains()
+        public bool LoopContains()
         {
             var iter = students.GetEnumerator();
 
@@ -320,25 +320,25 @@ namespace HashSetBenchmarks
                 var s = iter.Current;
                 if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
 
         [Benchmark]
-        public Student IteratorContains()
+        public bool IteratorContains()
         {
             foreach (var s in students)
             {
                 if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
     }
 
@@ -366,14 +366,14 @@ namespace HashSetBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public void LinqFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
+        public void LambdaFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -436,7 +436,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public HashSet<Student> LinqCopy() => new HashSet<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
+        public HashSet<Student> LambdaCopy() => new HashSet<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
 
         [Benchmark]
         public HashSet<Student> LoopCopy()
@@ -504,7 +504,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
+        public Dictionary<long, string> LambdaMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
 
         [Benchmark]
         public Dictionary<long, string> LoopMap()

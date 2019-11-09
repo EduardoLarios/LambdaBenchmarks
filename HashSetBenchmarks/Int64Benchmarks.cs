@@ -25,10 +25,10 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public long LinqAggregate() => data.Aggregate((total, num) => total + num);
+        public long LambdaReduce() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
-        public long LoopAggregate()
+        public long LoopReduce()
         {
             var iter = data.GetEnumerator();
             long total = 0;
@@ -42,7 +42,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public long IteratorAggregate()
+        public long IteratorReduce()
         {
             long total = 0;
             foreach (long value in data)
@@ -72,7 +72,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public HashSet<long> LinqPopulate() => new HashSet<long>(data.Select(n => (long)n * N));
+        public HashSet<long> LambdaPopulate() => new HashSet<long>(data.Select(n => (long)n * N));
 
         [Benchmark]
         public HashSet<long> LoopPopulate()
@@ -121,7 +121,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public long LinqIterate() => data.LongCount(n => n > 0);
+        public long LambdaIterate() => data.LongCount(n => n > 0);
 
         [Benchmark]
         public long LoopIterate()
@@ -176,31 +176,29 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public long LinqContains() => data.First(n => (n * n) == target);
+        public bool LambdaContains() => data.Any(n => (n * n) == target);
 
         [Benchmark]
-        public long LoopContains()
+        public bool LoopContains()
         {
             var iter = data.GetEnumerator();
             while (iter.MoveNext())
             {
-                var value = iter.Current * iter.Current;
-                if (value == target) return iter.Current;
+                if (iter.Current * iter.Current == target) return true;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public long IteratorContains()
+        public bool IteratorContains()
         {
             foreach (long n in data)
             {
-                var value = n * n;
-                if (value == target) return n;
+                if (n * n == target) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -228,7 +226,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
+        public void LambdaFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -276,7 +274,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public HashSet<long> LinqCopy() => new HashSet<long>(data.Select(n => n));
+        public HashSet<long> LambdaCopy() => new HashSet<long>(data.Select(n => n));
 
         [Benchmark]
         public HashSet<long> LoopCopy()
@@ -326,7 +324,7 @@ namespace HashSetBenchmarks
         }
 
         [Benchmark]
-        public void LinqMap() => data.Select(n => n * 5).Consume(consumer);
+        public void LambdaMap() => data.Select(n => n * 5).Consume(consumer);
 
         [Benchmark]
         public void LoopMap()

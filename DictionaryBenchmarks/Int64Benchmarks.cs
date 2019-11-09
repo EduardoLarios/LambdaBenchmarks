@@ -25,14 +25,14 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public long LinqAggregate()
+        public long LambdaReduce()
         {
             long total = 0;
             return data.Aggregate(total, (total, kvp) => total += kvp.Value / kvp.Key);
         }
 
         [Benchmark]
-        public long WhileLoopAggregate()
+        public long LoopReduce()
         {
             var iter = data.GetEnumerator();
             long total = 0;
@@ -46,7 +46,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public long ForEachAggregate()
+        public long IteratorReduce()
         {
             long total = 0;
             foreach (var pair in data)
@@ -76,7 +76,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<long, long> LinqPopulate() => data.ToDictionary(n => n, n => n * 5);
+        public Dictionary<long, long> LambdaPopulate() => data.ToDictionary(n => n, n => n * 5);
 
         [Benchmark]
         public Dictionary<long, long> LoopPopulate()
@@ -123,7 +123,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public long LinqIterate() => data.LongCount(kvp => kvp.Value < long.MaxValue);
+        public long LambdaIterate() => data.LongCount(kvp => kvp.Value < long.MaxValue);
 
         [Benchmark]
         public long LoopIterate()
@@ -177,30 +177,30 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public long LinqContains() => data.First(kvp => kvp.Value == target).Key;
+        public bool LambdaContains() => data.Any(kvp => kvp.Value == target);
 
         [Benchmark]
-        public long LoopContains()
+        public bool LoopContains()
         {
             var iter = data.GetEnumerator();
             while (iter.MoveNext())
             {
                 var kvp = iter.Current;
-                if (kvp.Value == target) return iter.Current.Key;
+                if (kvp.Value == target) return true;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public long IteratorContains()
+        public bool IteratorContains()
         {
             foreach (var kvp in data)
             {
-                if (kvp.Value == target) return kvp.Key;
+                if (kvp.Value == target) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -225,7 +225,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => data.Where(kvp => kvp.Key % 2 == 0).Consume(consumer);
+        public void LambdaFilter() => data.Where(kvp => kvp.Key % 2 == 0).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -277,7 +277,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<long, long> LinqCopy() => new Dictionary<long, long>(data.Select(kvp => kvp));
+        public Dictionary<long, long> LambdaCopy() => new Dictionary<long, long>(data.Select(kvp => kvp));
 
         [Benchmark]
         public Dictionary<long, long> LoopCopy()
@@ -327,7 +327,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public void LinqMap() => data.ToDictionary(kvp => kvp.Key * 2, kvp => kvp.Value * 2).Consume(consumer);
+        public void LambdaMap() => data.ToDictionary(kvp => kvp.Key * 2, kvp => kvp.Value * 2).Consume(consumer);
 
         [Benchmark]
         public void LoopMap()

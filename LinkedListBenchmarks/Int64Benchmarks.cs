@@ -25,10 +25,10 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public long LinqAggregate() => data.Aggregate((total, num) => total + num);
+        public long LambdaReduce() => data.Aggregate((total, num) => total + num);
 
         [Benchmark]
-        public long LoopAggregate()
+        public long LoopReduce()
         {
             long total = 0;
             var head = data.First;
@@ -43,7 +43,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public long IteratorAggregate()
+        public long IteratorReduce()
         {
             long total = 0;
             foreach (long value in data)
@@ -73,7 +73,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public LinkedList<long> LinqPopulate()
+        public LinkedList<long> LambdaPopulate()
         {
             var rnd = new Random();
             return new LinkedList<long>(data.Select(_ => (long)rnd.Next(1, 101) * N));
@@ -126,7 +126,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public long LinqIterate() => data.LongCount(n => n > 0);
+        public long LambdaIterate() => data.LongCount(n => n > 0);
 
         [Benchmark]
         public long LoopIterate()
@@ -179,31 +179,31 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public long LinqContains() => data.First(n => n == target);
+        public bool LambdaContains() => data.Any(n => n == target);
 
         [Benchmark]
-        public long LoopContains()
+        public bool LoopContains()
         {
             var head = data.First;
 
             while (head != null)
             {
-                if (head.Value == target) return head.Value;
+                if (head.Value == target) return true;
                 head = head.Next;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public long IteratorContains()
+        public bool IteratorContains()
         {
             foreach (long value in data)
             {
-                if (value == target) return value;
+                if (value == target) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -230,7 +230,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter() => data.Where(n => n >= 0).Consume(consumer);
+        public void LambdaFilter() => data.Where(n => n >= 0).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -279,7 +279,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public LinkedList<long> LinqCopy() => new LinkedList<long>(data.Select(n => n));
+        public LinkedList<long> LambdaCopy() => new LinkedList<long>(data.Select(n => n));
 
         [Benchmark]
         public LinkedList<long> LoopCopy()
@@ -330,7 +330,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public void LinqMap() => data.Select(n => n * 5).Consume(consumer);
+        public void LambdaMap() => data.Select(n => n * 5).Consume(consumer);
 
         [Benchmark]
         public void LoopMap()

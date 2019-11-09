@@ -16,7 +16,7 @@ namespace DictionaryBenchmarks
         public string lastName;
 
         public static List<string> firstNames = new List<string>()
-        { 
+        {
             // Simple Male
             "Juan",
             "Carlos",
@@ -99,7 +99,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public string LinqAggregate() =>
+        public string LambdaReduce() =>
             students.Aggregate(
                 new StringBuilder(),
                 (sb, kvp) => sb.AppendFormat
@@ -113,7 +113,7 @@ namespace DictionaryBenchmarks
                 sb => sb.ToString());
 
         [Benchmark]
-        public string LoopAggregate()
+        public string LoopReduce()
         {
             var builder = new StringBuilder(students.Count);
             var iter = students.GetEnumerator();
@@ -135,7 +135,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public string IteratorAggregate()
+        public string IteratorReduce()
         {
             var builder = new StringBuilder();
             foreach (var kvp in students)
@@ -168,7 +168,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<string, Student> LinqPopulate()
+        public Dictionary<string, Student> LambdaPopulate()
         {
             var rnd = new Random();
             return students.Select(s => new Student()
@@ -256,7 +256,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public int LinqIterate()
+        public int LambdaIterate()
         {
             return students.Count(kvp =>
                 kvp.Key.Length > 0 &&
@@ -338,9 +338,9 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public KeyValuePair<string, Student> LinqContains()
+        public bool LambdaContains()
         {
-            return students.First(kvp =>
+            return students.Any(kvp =>
                         kvp.Value.average >= 70 &&
                         kvp.Value.average <= 85 &&
                         kvp.Value.firstName.Contains(' ') &&
@@ -348,7 +348,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public KeyValuePair<string, Student> LoopContains()
+        public bool LoopContains()
         {
             static bool IsTarget(KeyValuePair<string, Student> kvp)
             {
@@ -363,14 +363,14 @@ namespace DictionaryBenchmarks
             while (iter.MoveNext())
             {
                 var kvp = iter.Current;
-                if (IsTarget(kvp)) return kvp;
+                if (IsTarget(kvp)) return true;
             }
 
-            return default;
+            return false;
         }
 
         [Benchmark]
-        public KeyValuePair<string, Student> IteratorContains()
+        public bool IteratorContains()
         {
             static bool IsTarget(KeyValuePair<string, Student> kvp)
             {
@@ -382,10 +382,10 @@ namespace DictionaryBenchmarks
 
             foreach (var kvp in students)
             {
-                if (IsTarget(kvp)) return kvp;
+                if (IsTarget(kvp)) return true;
             }
 
-            return default;
+            return false;
         }
     }
 
@@ -421,7 +421,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public void LinqFilter()
+        public void LambdaFilter()
         {
             students.Where(kvp =>
                     kvp.Value.average >= 70 &&
@@ -500,7 +500,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public Dictionary<string, Student> LinqCopy() =>
+        public Dictionary<string, Student> LambdaCopy() =>
             students.Select(kvp =>
                 new Student()
                 {
@@ -583,7 +583,7 @@ namespace DictionaryBenchmarks
         }
 
         [Benchmark]
-        public List<KeyValuePair<int, string>> LinqMap() =>
+        public List<KeyValuePair<int, string>> LambdaMap() =>
                 students.Select((kvp, index) =>
                     new KeyValuePair<int, string>(index, $"{kvp.Value.lastName},{kvp.Value.firstName} - {kvp.Value.average}")).ToList();
 

@@ -89,14 +89,14 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public string LinqAggregate() =>
+        public string LambdaReduce() =>
             students.Aggregate(
                 new StringBuilder(),
                 (sb, n) => sb.AppendFormat
@@ -109,7 +109,7 @@ namespace LinkedListBenchmarks
                 sb => sb.ToString());
 
         [Benchmark]
-        public string LoopAggregate()
+        public string LoopReduce()
         {
             var builder = new StringBuilder(students.Count);
             var head = students.First;
@@ -132,7 +132,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public string IteratorAggregate()
+        public string IteratorReduce()
         {
             var builder = new StringBuilder();
             foreach (var student in students)
@@ -164,7 +164,7 @@ namespace LinkedListBenchmarks
         }
 
         [Benchmark]
-        public LinkedList<Student> LinqPopulate()
+        public LinkedList<Student> LambdaPopulate()
         {
             var rnd = new Random();
             var init = students.Select(n => new Student()
@@ -224,59 +224,6 @@ namespace LinkedListBenchmarks
     {
         private const int N = 1_000_000;
         private readonly LinkedList<Student> students;
-        private readonly List<string> firstNames = new List<string>()
-        { 
-            // Simple Male
-            "Juan",
-            "Carlos",
-            "Manuel",
-            "Francisco",
-            "Mauricio",
-            "Eduardo",
-            // Simple Female
-            "Fernanda",
-            "María",
-            "Sofía",
-            "Ana",
-            "Carla",
-            "Marlene",
-            // Composite Male
-            "Juan Manuel",
-            "Luis Carlos",
-            "Manuel Alejandro",
-            "Javier Francisco",
-            "Luis Eduardo",
-            "José Luis",
-            // Composite Female
-            "María Fernanda",
-            "María Jose",
-            "Sofía Paulina",
-            "Ana Belén",
-            "Daniela Alejandra",
-            "Luz Angélica"
-        };
-        private readonly List<string> lastNames = new List<string>()
-        {
-            "García",
-            "Rodríguez",
-            "Hernández",
-            "López",
-            "Martínez",
-            "González",
-            "Pérez",
-            "Sánchez",
-            "Ramírez",
-            "Torres",
-            "Flores",
-            "Rivera",
-            "Gómez",
-            "Díaz",
-            "Cruz",
-            "Morales",
-            "Reyes",
-            "Gutiérrez",
-            "Ortiz"
-        };
 
         public IterateStudent()
         {
@@ -289,14 +236,14 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{firstNames[rnd.Next(0, firstNames.Count)]}",
-                    lastName = $"{lastNames[rnd.Next(0, lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public int LinqIterate() => students.Count(n => n.firstName.Length > 0 && n.average >= 50 && n.ID < long.MaxValue);
+        public int LambdaIterate() => students.Count(n => n.firstName.Length > 0 && n.average >= 50 && n.ID < long.MaxValue);
 
         [Benchmark]
         public int LoopIterate()
@@ -357,42 +304,42 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public Student LinqContains() => students.Find(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
+        public bool LambdaContains() => students.Any(s => s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"));
 
         [Benchmark]
-        public Student LoopContains()
+        public bool LoopContains()
         {
             for (int i = 0; i < students.Count; i++)
             {
                 var s = students[i];
                 if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
 
         [Benchmark]
-        public Student IteratorContains()
+        public bool IteratorContains()
         {
             foreach (var s in students)
             {
                 if (s.average >= 70 && s.average <= 85 && s.firstName.Contains(' ') && s.lastName.Contains("es"))
                 {
-                    return s;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
         }
     }
 
@@ -420,14 +367,14 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public void LinqFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
+        public void LambdaFilter() => students.Where(s => s.average > 50 && s.average < 70 && s.firstName.Contains('i', StringComparison.InvariantCulture) && s.ID > target).Consume(consumer);
 
         [Benchmark]
         public void LoopFilter()
@@ -485,14 +432,14 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public LinkedList<Student> LinqCopy() => new LinkedList<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
+        public LinkedList<Student> LambdaCopy() => new LinkedList<Student>(students.Select(s => new Student() { average = s.average, ID = s.ID, firstName = s.firstName, lastName = s.lastName }));
 
         [Benchmark]
         public LinkedList<Student> LoopCopy()
@@ -555,14 +502,14 @@ namespace LinkedListBenchmarks
                 {
                     average = rnd.Next(50, 101),
                     ID = i * N,
-                    firstName = $"{Student.firstNames[rnd.Next(0, Student.firstNames.Count)]}",
-                    lastName = $"{Student.lastNames[rnd.Next(0, Student.lastNames.Count)]}"
+                    firstName = Student.firstNames[rnd.Next(0, Student.firstNames.Count)],
+                    lastName = Student.lastNames[rnd.Next(0, Student.lastNames.Count)]
                 });
             }
         }
 
         [Benchmark]
-        public Dictionary<long, string> LinqMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
+        public Dictionary<long, string> LambdaMap() => students.ToDictionary(s => s.ID, s => $"{s.lastName}, {s.firstName}");
 
         [Benchmark]
         public Dictionary<long, string> LoopMap()
