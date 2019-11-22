@@ -10,7 +10,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private Dictionary<long, long> data;
 
@@ -61,7 +61,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<long> data;
 
@@ -108,7 +108,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class IterateInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private Dictionary<long, long> data;
 
@@ -156,7 +156,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private long target;
         private Dictionary<long, long> data;
@@ -207,7 +207,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class FilterInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private Dictionary<long, long> data;
         private Consumer consumer;
@@ -261,7 +261,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class CopyInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private Dictionary<long, long> data;
 
@@ -309,7 +309,7 @@ namespace DictionaryBenchmarks
     [MemoryDiagnoser]
     public class MapInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private Dictionary<long, long> data;
         private Consumer consumer;

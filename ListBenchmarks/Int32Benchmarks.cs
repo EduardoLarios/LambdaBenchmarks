@@ -10,7 +10,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
 
@@ -55,7 +55,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
 
@@ -105,7 +105,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
 
@@ -146,7 +146,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private int target;
         private List<int> data;
@@ -194,7 +194,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
         private Consumer consumer;
@@ -246,7 +246,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
 
@@ -287,7 +287,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapInt32
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
         private Consumer consumer;

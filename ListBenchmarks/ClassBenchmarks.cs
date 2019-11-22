@@ -73,8 +73,8 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ReduceStudent
     {
-        [Params(100, 1000, 10_000)]
-        public int N = 1_000_000;
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
+        public int N;
         private List<Student> students;
 
         [GlobalSetup]
@@ -148,7 +148,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class PopulateStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private IEnumerable<int> students;
 
@@ -215,7 +215,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class IterateStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<Student> students;
 
@@ -280,7 +280,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class ContainsStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<Student> students;
 
@@ -344,7 +344,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class FilterStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private int target;
         private Consumer consumer;
@@ -409,7 +409,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class CopyStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<Student> students;
 
@@ -475,7 +475,7 @@ namespace ListBenchmarks
     [MemoryDiagnoser]
     public class MapStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<Student> students;
 

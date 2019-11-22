@@ -73,7 +73,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ReduceStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private LinkedList<Student> students;
 
@@ -153,7 +153,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class PopulateStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private IEnumerable<int> students;
 
@@ -222,7 +222,8 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class IterateStudent
     {
-        private const int N = 1_000_000;
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
+        public int N;
         private readonly LinkedList<Student> students;
 
         public IterateStudent()
@@ -288,7 +289,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class ContainsStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<Student> students;
 
@@ -346,7 +347,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class FilterStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private int target;
         private Consumer consumer;
@@ -415,7 +416,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class CopyStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private LinkedList<Student> students;
 
@@ -486,7 +487,7 @@ namespace LinkedListBenchmarks
     [MemoryDiagnoser]
     public class MapStudent
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private LinkedList<Student> students;
 

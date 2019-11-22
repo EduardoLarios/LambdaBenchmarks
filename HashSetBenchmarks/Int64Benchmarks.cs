@@ -10,7 +10,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ReduceInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private HashSet<long> data;
 
@@ -57,7 +57,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class PopulateInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private List<int> data;
 
@@ -106,7 +106,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class IterateInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private HashSet<long> data;
 
@@ -154,7 +154,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class ContainsInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private long target;
         private HashSet<long> data;
@@ -205,7 +205,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class FilterInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private HashSet<long> data;
         private Consumer consumer;
@@ -259,7 +259,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class CopyInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private HashSet<long> data;
 
@@ -306,7 +306,7 @@ namespace HashSetBenchmarks
     [MemoryDiagnoser]
     public class MapInt64
     {
-        [Params(100, 1000, 10_000)]
+        [Params(100, 1000, 10_000, 100_000, 1_000_000)]
         public int N;
         private HashSet<long> data;
         private Consumer consumer;
