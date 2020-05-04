@@ -1,8 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Engines;
-using BenchmarkDotNet.Running;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BenchmarkDotNet.Running;
 using System;
 
 namespace ListBenchmarks
@@ -19,7 +15,7 @@ namespace ListBenchmarks
             BenchmarkRunner.Run<MapInt32>();
             BenchmarkRunner.Run<FilterInt32>();
             BenchmarkRunner.Run<ReduceInt32>();
-            
+
             BenchmarkRunner.Run<PopulateInt64>();
             BenchmarkRunner.Run<IterateInt64>();
             BenchmarkRunner.Run<ContainsInt64>();
@@ -27,7 +23,7 @@ namespace ListBenchmarks
             BenchmarkRunner.Run<MapInt64>();
             BenchmarkRunner.Run<FilterInt64>();
             BenchmarkRunner.Run<ReduceInt64>();
-            
+
             BenchmarkRunner.Run<PopulateStudent>();
             BenchmarkRunner.Run<IterateStudent>();
             BenchmarkRunner.Run<ContainsStudent>();

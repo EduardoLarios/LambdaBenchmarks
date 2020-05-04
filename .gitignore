@@ -15,3 +15,8 @@ FacadePatternBenchmark/obj
 ObserverPatternBenchmark/bin
 ObserverPatternBenchmark/obj
 .vs
+
+.fake
+.ionide
+/.vs
+/.ionide
